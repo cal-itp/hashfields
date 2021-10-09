@@ -1,0 +1,16 @@
+{
+  "name": "hashfields",
+  "dockerComposeFile": [
+    "compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/hashfields",
+  "extensions": [
+    "ms-dotnettools.csharp",
+    "josefpihrt-vscode.roslynator",
+    "formulahendry.dotnet-test-explorer",
+    "fernandoescolar.vscode-solution-explorer",
+    "eamodio.gitlens",
+  ],
+  "shutdownAction": "stopCompose"
+}
