@@ -11,6 +11,7 @@
     "formulahendry.dotnet-test-explorer",
     "fernandoescolar.vscode-solution-explorer",
     "eamodio.gitlens",
+    "spmeesseman.vscode-taskexplorer"
   ],
   "postAttachCommand": [
     "/bin/bash",
