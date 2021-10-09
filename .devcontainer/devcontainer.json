@@ -12,5 +12,9 @@
     "fernandoescolar.vscode-solution-explorer",
     "eamodio.gitlens",
   ],
+  "postAttachCommand": [
+    "/bin/bash",
+    ".devcontainer/postAttach.sh"
+  ],
   "shutdownAction": "stopCompose"
 }
