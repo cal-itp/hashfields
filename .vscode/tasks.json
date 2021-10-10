@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build-cli",
+      "label": "build",
       "command": "dotnet",
       "type": "process",
       "args": [
@@ -18,11 +18,13 @@
       }
     },
     {
-      "label": "publish-cli",
+      "label": "publish",
       "command": "dotnet",
       "type": "process",
       "args": [
         "publish",
+        "-c",
+        "Release",
         "${workspaceFolder}/src/Cli/Cli.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
@@ -46,14 +48,14 @@
       }
     },
     {
-      "label": "watch-cli",
+      "label": "watch-test-cli",
       "command": "dotnet",
       "type": "process",
       "args": [
         "watch",
-        "run",
+        "test",
         "--project",
-        "${workspaceFolder}/src/Cli/Cli.csproj",
+        "${workspaceFolder}/tests/Cli/Cli.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
