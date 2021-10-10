@@ -25,3 +25,16 @@ Use the *Task Explorer* or enter the following commands:
 * Type `task run` and hit `Enter`
 * Type `watch-test-cli` and hit `Enter`
 * Edit a `src` or `tests` file to see the solution rebuild and `Cli` tests rerun
+
+## Deploy a self-contained app
+
+The `Cli` app is deployed as a standalone, self-contained executable.
+
+Test this (deploying to an otherwise-empty Alpine Linux target):
+
+```bash
+cd .devcontainer
+docker compose up --build deploy-alpine
+```
+
+The `Cli` program's output is displayed in the terminal before the container shuts down.

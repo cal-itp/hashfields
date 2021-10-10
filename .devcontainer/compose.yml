@@ -11,3 +11,10 @@ services:
     working_dir: /hashfields
     volumes:
         - ..:/hashfields
+
+  deploy-alpine:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.deploy-alpine
+    image: hashfields:deploy-alpine
+    command: ["./hashfields"]

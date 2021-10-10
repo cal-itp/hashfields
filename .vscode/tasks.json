@@ -23,9 +23,11 @@
       "type": "process",
       "args": [
         "publish",
+        "-r",
+        "linux-x64",
         "-c",
         "Release",
-        "${workspaceFolder}/src/Cli/Cli.csproj",
+        "${workspaceFolder}/src/Cli/Cli.single.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],

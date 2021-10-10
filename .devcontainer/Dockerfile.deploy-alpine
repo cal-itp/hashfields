@@ -1,0 +1,16 @@
+FROM hashfields:dev as builder
+
+WORKDIR /builder
+
+COPY HashFields.sln HashFields.sln
+COPY src/ src/
+COPY tests/ tests/
+
+RUN dotnet restore src/Cli/Cli.deploy.csproj
+RUN dotnet publish -r linux-musl-x64 -c Release -o ./out src/Cli/Cli.deploy.csproj
+
+FROM mcr.microsoft.com/dotnet/runtime-deps:5.0-alpine
+
+WORKDIR /hashfields
+COPY --from=builder /builder/out .
+RUN mv Cli.deploy hashfields

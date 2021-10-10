@@ -4,6 +4,9 @@
     "compose.yml"
   ],
   "service": "dev",
+  "runServices": [
+    "dev"
+  ],
   "workspaceFolder": "/hashfields",
   "extensions": [
     "ms-dotnettools.csharp",
