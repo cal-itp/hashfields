@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HashFields.Data.Tests
@@ -20,6 +21,21 @@ namespace HashFields.Data.Tests
             var columnar = csv.ToColumnar();
 
             Assert.ReferenceEquals(new Dictionary<string, List<string>>(), columnar);
+        }
+
+        [TestMethod]
+        public void ToColumnar_SingleRow_Returns_DictWithKeysAndEmptyLists()
+        {
+            var csv = new Csv("1, 2, 3");
+            var columnar = csv.ToColumnar();
+
+            var keys = columnar.Keys.ToArray();
+            CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, keys);
+
+            foreach (var column in columnar.Values)
+            {
+                CollectionAssert.AreEquivalent(new List<string>(), column);
+            }
         }
     }
 }

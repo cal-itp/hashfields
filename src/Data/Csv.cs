@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -27,6 +27,16 @@ namespace HashFields.Data
             if (String.IsNullOrEmpty(_csv_text))
             {
                 return columnar;
+            }
+
+            using (var parser = new TextFieldParser(new MemoryStream(_csv_data)))
+            {
+                parser.SetDelimiters(new[] { "," });
+                string[] fields = parser.ReadFields();
+
+                columnar = new Dictionary<string, List<string>>(
+                    fields.Select(f => new KeyValuePair<string, List<string>>(f, new List<string>()))
+                );
             }
 
             return columnar;
