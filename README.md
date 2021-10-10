@@ -19,12 +19,12 @@ Use the *Task Explorer* or enter the following commands:
 * `Ctrl/Cmd+P` to bring up the Command Palette
 * Type `task run test task` and hit `Enter`
 
-### Watch/Run the `Cli` tests
+### Watch/Run project-specific tests
 
 * `Ctrl/Cmd+P` to bring up the Command Palette
 * Type `task run` and hit `Enter`
-* Type `watch-test-cli` and hit `Enter`
-* Edit a `src` or `tests` file to see the solution rebuild and `Cli` tests rerun
+* Type `watch-test-X` where `X` is the project, and hit `Enter`
+* Edit a `src` or `tests` file to see the solution rebuild and tests rerun
 
 ## Deploy a self-contained app
 
