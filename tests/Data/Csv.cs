@@ -56,5 +56,37 @@ namespace HashFields.Data.Tests
                 CollectionAssert.AreEquivalent(new List<string>(), column);
             }
         }
+
+        [TestMethod]
+        public void ToColumnar_MultiRow_Returns_DictWithKeysAndLists()
+        {
+            const string text = @"1, a, !
+            2, b, @
+            3, c, #";
+            var csv = new Csv(text);
+            var columnar = csv.ToColumnar();
+
+            var keys = columnar.Keys.ToArray();
+
+            CollectionAssert.AreEquivalent(new[] { "1", "a", "!" }, keys);
+
+            foreach (var column in keys)
+            {
+                Assert.AreEqual(2, columnar[column].Count);
+
+                if (column == "1")
+                {
+                    CollectionAssert.AreEquivalent(new[] { "2", "3" }, columnar[column]);
+                }
+                else if (column == "a")
+                {
+                    CollectionAssert.AreEquivalent(new[] { "b", "c" }, columnar[column]);
+                }
+                else if (column == "!")
+                {
+                    CollectionAssert.AreEquivalent(new[] { "@", "#" }, columnar[column]);
+                }
+            }
+        }
     }
 }

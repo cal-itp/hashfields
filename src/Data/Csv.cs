@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
+using System.Text;
 
 using Microsoft.VisualBasic.FileIO;
-using System.Text;
 
 namespace HashFields.Data
 {
@@ -22,24 +22,47 @@ namespace HashFields.Data
 
         public IDictionary<string, List<string>> ToColumnar()
         {
-            var columnar = new Dictionary<string, List<string>>();
-
             if (String.IsNullOrEmpty(_csv_text))
             {
-                return columnar;
+                return new Dictionary<string, List<string>>();
             }
 
+            var columnar = new Dictionary<int, List<string>>();
+            var header = new List<string>();
+
+            // convert raw _csv_data bytes to MemoryStream for TextFieldParser
             using (var parser = new TextFieldParser(new MemoryStream(_csv_data)))
             {
                 parser.SetDelimiters(new[] { "," });
-                string[] fields = parser.ReadFields();
 
-                columnar = new Dictionary<string, List<string>>(
-                    fields.Select(f => new KeyValuePair<string, List<string>>(f, new List<string>()))
-                );
+                // first row assumed to be the header
+                header = parser.ReadFields().ToList();
+
+                foreach (var field in header)
+                {
+                    // internally track the index to ensure order is maintained
+                    columnar.Add(header.IndexOf(field), new List<string>());
+                }
+
+                while (!parser.EndOfData)
+                {
+                    // read the next line of data
+                    // add each field's value to the corresponding column list
+
+                    var fields = parser.ReadFields();
+
+                    foreach (var key in columnar.Keys)
+                    {
+                        columnar[key].Add(fields[key]);
+                    }
+                }
             }
 
-            return columnar;
+            // convert index number back into header value
+            return columnar.ToDictionary(
+                kvp => header[kvp.Key],
+                kvp => kvp.Value
+            );
         }
     }
 }
