@@ -16,7 +16,7 @@ namespace HashFields.Data
 
         public Csv(string csv_text)
         {
-            _csv_text = csv_text ?? String.Empty;
+            _csv_text = (csv_text ?? String.Empty).Trim();
             _csv_data = _encoding.GetBytes(_csv_text);
         }
 

@@ -37,5 +37,24 @@ namespace HashFields.Data.Tests
                 CollectionAssert.AreEquivalent(new List<string>(), column);
             }
         }
+
+        [TestMethod]
+        public void ToColumnar_BlankLines_Trimmed()
+        {
+            const string text = @"
+            1, 2, 3
+            ";
+            var csv = new Csv(text);
+            var columnar = csv.ToColumnar();
+
+            var keys = columnar.Keys.ToArray();
+
+            CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, keys);
+
+            foreach (var column in columnar.Values)
+            {
+                CollectionAssert.AreEquivalent(new List<string>(), column);
+            }
+        }
     }
 }
