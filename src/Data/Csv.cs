@@ -10,19 +10,24 @@ namespace HashFields.Data
 {
     public class Csv
     {
-        private readonly Encoding _encoding = Encoding.UTF8;
-        private readonly byte[] _csv_data;
-        private readonly string _csv_text;
+        private readonly Stream _stream;
 
-        public Csv(string csv_text)
+        public Csv(string csvText)
         {
-            _csv_text = (csv_text ?? String.Empty).Trim();
-            _csv_data = _encoding.GetBytes(_csv_text);
+            var text = (csvText ?? String.Empty).Trim();
+            var data = Encoding.UTF8.GetBytes(text);
+
+            _stream = new MemoryStream(data);
+        }
+
+        public Csv(Stream stream)
+        {
+            _stream = stream;
         }
 
         public IDictionary<string, List<string>> ToColumnar()
         {
-            if (String.IsNullOrEmpty(_csv_text))
+            if (_stream is null || _stream.Length < 1)
             {
                 return new Dictionary<string, List<string>>();
             }
@@ -30,8 +35,7 @@ namespace HashFields.Data
             var columnar = new Dictionary<int, List<string>>();
             var header = new List<string>();
 
-            // convert raw _csv_data bytes to MemoryStream for TextFieldParser
-            using (var parser = new TextFieldParser(new MemoryStream(_csv_data)))
+            using (var parser = new TextFieldParser(_stream))
             {
                 parser.SetDelimiters(new[] { "," });
 
@@ -48,7 +52,6 @@ namespace HashFields.Data
                 {
                     // read the next line of data
                     // add each field's value to the corresponding column list
-
                     var fields = parser.ReadFields();
 
                     foreach (var key in columnar.Keys)
