@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HashFields.Data.Tests
@@ -10,6 +11,15 @@ namespace HashFields.Data.Tests
         {
             var csv = new Csv("");
             Assert.IsNotNull(csv);
+        }
+
+        [TestMethod]
+        public void ToColumnar_Empty_Returns_NewDict()
+        {
+            var csv = new Csv("");
+            var columnar = csv.ToColumnar();
+
+            Assert.ReferenceEquals(new Dictionary<string, List<string>>(), columnar);
         }
     }
 }
