@@ -71,7 +71,7 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void Write_Stream()
         {
-            var data = Encoding.UTF8.GetBytes("1, 2, 3");
+            var data = Encoding.UTF8.GetBytes("1,2,3\na,b,c\n!,@,#\n");
 
             using var source = new MemoryStream(data);
             var csv = new Csv(source);
@@ -82,31 +82,6 @@ namespace HashFields.Data.Tests
             csv.Write(destination);
 
             CollectionAssert.AreEquivalent(destination.ToArray(), data);
-        }
-
-        [TestMethod]
-        public void Write_Stream_RewindsStreams()
-        {
-            var data = Encoding.UTF8.GetBytes("1, 2, 3");
-
-            using var source = new MemoryStream(data);
-            var csv = new Csv(source);
-
-            var destination = new MemoryStream();
-            csv.Write(destination);
-
-            Assert.AreEqual(0, source.Position);
-            Assert.AreEqual(0, destination.Position);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Write_StreamNull_InvalidOperationException()
-        {
-            var csv = new Csv((Stream)null);
-            var destination = new MemoryStream();
-
-            csv.Write(destination);
         }
 
         [TestMethod]

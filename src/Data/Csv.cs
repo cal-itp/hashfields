@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,10 +37,10 @@ namespace HashFields.Data
         }
 
         public void Dispose()
-            {
+        {
             _stream?.Close();
             GC.SuppressFinalize(this);
-            }
+        }
 
         public void Remove(params string[] columns)
         {
@@ -152,6 +152,34 @@ namespace HashFields.Data
                     _headers.Remove(column);
                     _data.Remove(column);
                 }
+            }
+
+            public void Write(Stream destination)
+            {
+                using var sw = new StreamWriter(destination);
+                foreach (var row in Rows())
+                {
+                    sw.WriteLine(String.Join(",", row));
+                }
+            }
+
+            private List<List<string>> Rows()
+            {
+                var rows = Enumerable.Range(0, Columns.Max(c => c.Count))
+                                     .Select(_ => new List<string>())
+                                     .ToList();
+
+                foreach (var column in Columns)
+                {
+                    foreach (var val in column)
+                    {
+                        rows[column.IndexOf(val)].Add(val);
+                    }
+                }
+
+                rows.Insert(0, Header);
+
+                return rows;
             }
 
             private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream)
