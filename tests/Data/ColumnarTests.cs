@@ -11,10 +11,18 @@ namespace HashFields.Data.Tests
     [TestClass]
     public class ColumnarTests
     {
-        [TestMethod]
+        private static readonly byte[] _data = Encoding.UTF8.GetBytes(@"
+            1, a, !
+            2, b, @
+            3, c, #"
+        );
+
+        private static Columnar NewColumnar(byte[] data) => new(new MemoryStream(data));
+
+        [TestMethod()]
         public void New_Empty_Initializes_Empty()
         {
-            var columnar = new Columnar(new MemoryStream(Array.Empty<byte>()));
+            var columnar = NewColumnar(Array.Empty<byte>());
 
             Assert.IsNotNull(columnar);
             Assert.IsNotNull(columnar.Header);
@@ -25,7 +33,7 @@ namespace HashFields.Data.Tests
         public void New_SingleRow_Initializes_HeaderAndColumns()
         {
             var data = Encoding.UTF8.GetBytes("1, 2, 3");
-            var columnar = new Columnar(new MemoryStream(data));
+            var columnar = NewColumnar(data);
 
             var header = columnar.Header.ToArray();
             CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, header);
@@ -49,7 +57,7 @@ namespace HashFields.Data.Tests
 
             ");
 
-            var columnar = new Columnar(new MemoryStream(data));
+            var columnar = NewColumnar(data);
 
             var header = columnar.Header.ToArray();
             CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, header);
@@ -65,12 +73,7 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void New_MultiRow_Returns_DictWithKeysAndLists()
         {
-            var data = Encoding.UTF8.GetBytes(@"
-            1, a, !
-            2, b, @
-            3, c, #");
-
-            var columnar = new Columnar(new MemoryStream(data));
+            var columnar = NewColumnar(_data);
 
             var header = columnar.Header.ToArray();
             CollectionAssert.AreEquivalent(new[] { "1", "a", "!" }, header);
@@ -99,13 +102,8 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void Equals_Other_Columnar()
         {
-            var data = Encoding.UTF8.GetBytes(@"
-            1, a, !
-            2, b, @
-            3, c, #");
-
-            var columnar1 = new Columnar(new MemoryStream(data));
-            var columnar2 = new Columnar(new MemoryStream(data));
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
 
             Assert.IsTrue(columnar1.Equals(columnar2));
         }
@@ -113,13 +111,8 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void Equals_Other_Object()
         {
-            var data = Encoding.UTF8.GetBytes(@"
-            1, a, !
-            2, b, @
-            3, c, #");
-
-            var columnar1 = new Columnar(new MemoryStream(data));
-            var columnar2 = new Columnar(new MemoryStream(data));
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
 
             Assert.IsTrue(columnar1.Equals((object)columnar2));
         }
@@ -127,13 +120,8 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void HashCode_Matches_Other()
         {
-            var data = Encoding.UTF8.GetBytes(@"
-            1, a, !
-            2, b, @
-            3, c, #");
-
-            var columnar1 = new Columnar(new MemoryStream(data));
-            var columnar2 = new Columnar(new MemoryStream(data));
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
 
             Assert.AreEqual(columnar1.GetHashCode(), columnar2.GetHashCode());
         }
