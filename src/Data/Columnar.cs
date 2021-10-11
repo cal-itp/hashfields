@@ -41,30 +41,28 @@ namespace HashFields.Data
         {
             var header = new List<string>();
             var columnar = new Dictionary<int, List<string>>();
+            var parser = new TextFieldParser(stream);
 
-            using (var parser = new TextFieldParser(stream))
+            parser.SetDelimiters(new[] { "," });
+
+            // first row assumed to be the header
+            header = parser.ReadFields().ToList();
+
+            foreach (var field in header)
             {
-                parser.SetDelimiters(new[] { "," });
+                // internally track the index to ensure order is maintained
+                columnar.Add(header.IndexOf(field), new List<string>());
+            }
 
-                // first row assumed to be the header
-                header = parser.ReadFields().ToList();
+            while (!parser.EndOfData)
+            {
+                // read the next line of data
+                // add each field's value to the corresponding column list
+                var fields = parser.ReadFields();
 
-                foreach (var field in header)
+                foreach (var key in columnar.Keys)
                 {
-                    // internally track the index to ensure order is maintained
-                    columnar.Add(header.IndexOf(field), new List<string>());
-                }
-
-                while (!parser.EndOfData)
-                {
-                    // read the next line of data
-                    // add each field's value to the corresponding column list
-                    var fields = parser.ReadFields();
-
-                    foreach (var key in columnar.Keys)
-                    {
-                        columnar[key].Add(fields[key]);
-                    }
+                    columnar[key].Add(fields[key]);
                 }
             }
 

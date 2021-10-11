@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HashFields.Data
 {
-    public class Csv : IColumnar
+    public class Csv : IColumnar, IDisposable
     {
         private readonly Stream _stream;
 
@@ -23,6 +23,30 @@ namespace HashFields.Data
 
             _stream = new MemoryStream(data);
             Columnar = new Columnar(_stream);
+        }
+
+        public void Write(Stream destination)
+        {
+            if (_stream is null)
+            {
+                throw new InvalidOperationException("Csv stream is null.");
+            }
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            _stream.Seek(0, SeekOrigin.Begin);
+            _stream.CopyTo(destination);
+
+            _stream.Seek(0, SeekOrigin.Begin);
+            destination.Seek(0, SeekOrigin.Begin);
+        }
+
+        public void Dispose()
+        {
+            _stream?.Close();
+            GC.SuppressFinalize(this);
         }
     }
 }

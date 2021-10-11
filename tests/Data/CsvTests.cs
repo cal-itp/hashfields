@@ -58,13 +58,63 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void New_Text_Columnar()
         {
-            var text = "1, 2, 3";
+            const string text = "1, 2, 3";
             var data = Encoding.UTF8.GetBytes(text);
             var expected = new Columnar(new MemoryStream(data));
 
             var csv = new Csv(text);
 
             Assert.AreEqual(expected, csv.Columnar);
+        }
+
+        [TestMethod]
+        public void Write_Stream()
+        {
+            var data = Encoding.UTF8.GetBytes("1, 2, 3");
+
+            using var source = new MemoryStream(data);
+            var csv = new Csv(source);
+
+            var destination = new MemoryStream();
+            CollectionAssert.AreEquivalent(destination.ToArray(), Array.Empty<byte>());
+
+            csv.Write(destination);
+
+            CollectionAssert.AreEquivalent(destination.ToArray(), data);
+        }
+
+        [TestMethod]
+        public void Write_Stream_RewindsStreams()
+        {
+            var data = Encoding.UTF8.GetBytes("1, 2, 3");
+
+            using var source = new MemoryStream(data);
+            var csv = new Csv(source);
+
+            var destination = new MemoryStream();
+            csv.Write(destination);
+
+            Assert.AreEqual(0, source.Position);
+            Assert.AreEqual(0, destination.Position);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Write_StreamNull_InvalidOperationException()
+        {
+            var csv = new Csv((Stream)null);
+            var destination = new MemoryStream();
+
+            csv.Write(destination);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Write_DestinationNull_ArgumentNullException()
+        {
+            var csv = new Csv("");
+
+            csv.Write((Stream)null);
         }
     }
 }
