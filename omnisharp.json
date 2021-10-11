@@ -1,0 +1,16 @@
+{
+    "FileOptions": {
+        "SystemExcludeSearchPatterns": [
+            "**/bin/**/*",
+            "**/obj/**/*",
+            "**/.git/**/*"
+        ]
+    },
+    "FormattingOptions": {
+        "IndentationSize": 4,
+        "NewLine": "\n",
+        "OrganizeImports": true,
+        "TabSize": 4,
+        "UseTabs": false
+    }
+}
