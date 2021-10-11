@@ -19,8 +19,8 @@ namespace HashFields.Data
 
         public List<string> this[string key] { get => _data[key]; }
         public List<string> this[int index] { get => _data[_headers[index]]; }
-        public IList<string> Header { get => _headers.ToList(); }
-        public IList<List<string>> Columns { get => _data.Values.ToList(); }
+        public List<string> Header { get => _headers.ToList(); }
+        public List<List<string>> Columns { get => _data.Values.ToList(); }
 
         public Columnar() : this(null)
         {
@@ -34,6 +34,15 @@ namespace HashFields.Data
 
                 _headers = tuple.Item1;
                 _data = tuple.Item2;
+            }
+        }
+
+        public void Remove(params string[] columns)
+        {
+            foreach (var column in _headers.Intersect(columns).ToArray())
+            {
+                _headers.Remove(column);
+                _data.Remove(column);
             }
         }
 

@@ -125,5 +125,32 @@ namespace HashFields.Data.Tests
 
             Assert.AreEqual(columnar1.GetHashCode(), columnar2.GetHashCode());
         }
+
+        [TestMethod]
+        public void Remove_Removes_Columns()
+        {
+            var columnar = NewColumnar(_data);
+
+            columnar.Remove("1", "!");
+
+            Assert.AreEqual(1, columnar.Header.Count);
+            Assert.AreEqual(1, columnar.Columns.Count);
+            Assert.IsTrue(columnar.Header.Contains("a"));
+            CollectionAssert.AreEquivalent(columnar.Columns[0], new string[] { "b", "c" }.ToList());
+        }
+
+        [TestMethod]
+        public void Remove_DoesNotRemove_NonExistentColumns()
+        {
+            var columnar = NewColumnar(_data);
+
+            columnar.Remove("z", "&");
+
+            Assert.AreEqual(3, columnar.Header.Count);
+            Assert.AreEqual(3, columnar.Columns.Count);
+            Assert.IsTrue(columnar.Header.Contains("a"));
+            Assert.IsTrue(columnar.Header.Contains("1"));
+            Assert.IsTrue(columnar.Header.Contains("!"));
+        }
     }
 }
