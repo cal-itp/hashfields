@@ -25,11 +25,12 @@ namespace HashFields.Cli.Tests
         }
 
         [TestMethod]
-        public void Main_Says_Hello()
+        public void Main_Says_HelloGoodbye()
         {
             Program.Main(Array.Empty<string>());
 
             StringAssert.Contains(testOut.ToString().ToLower(), "hello hashfields.cli");
+            StringAssert.Contains(testOut.ToString().ToLower(), "goodbye hashfields.cli");
         }
     }
 }
