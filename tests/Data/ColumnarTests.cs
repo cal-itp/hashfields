@@ -19,6 +19,75 @@ namespace HashFields.Data.Tests
 
         private static Columnar NewColumnar(byte[] data) => new(new MemoryStream(data));
 
+        [TestMethod]
+        public void Apply_Modifies_Columns()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+            2, 3, 5
+            4, 6, 10
+            6, 9, 15
+            ");
+
+            var columnar = NewColumnar(data);
+
+            columnar.Apply(val => val + "_mod", "2");
+
+            foreach (var elem in columnar["2"])
+            {
+                CollectionAssert.Contains(new[] { "4_mod", "6_mod" }, elem);
+            }
+            foreach (var elem in columnar["3"].Union(columnar["5"]))
+            {
+                CollectionAssert.Contains(new[] { "6", "9", "10", "15" }, elem);
+            }
+        }
+
+        [TestMethod]
+        public void Apply_DoesNotModify_NonExistentColumns()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+            2, 3, 5
+            4, 6, 10
+            6, 9, 15
+            ");
+
+            var columnar = NewColumnar(data);
+
+            columnar.Apply(val => val + "_mod", "z");
+
+            foreach (var elem in columnar["2"].Union(columnar["3"].Union(columnar["5"])))
+            {
+                CollectionAssert.Contains(new[] { "4", "6", "9", "10", "15" }, elem);
+            }
+        }
+
+        [TestMethod]
+        public void Equals_Other_Columnar()
+        {
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
+
+            Assert.IsTrue(columnar1.Equals(columnar2));
+        }
+
+        [TestMethod]
+        public void Equals_Other_Object()
+        {
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
+
+            Assert.IsTrue(columnar1.Equals((object)columnar2));
+        }
+
+        [TestMethod]
+        public void HashCode_Matches_Other()
+        {
+            var columnar1 = NewColumnar(_data);
+            var columnar2 = NewColumnar(_data);
+
+            Assert.AreEqual(columnar1.GetHashCode(), columnar2.GetHashCode());
+        }
+
         [TestMethod()]
         public void New_Empty_Initializes_Empty()
         {
@@ -97,33 +166,6 @@ namespace HashFields.Data.Tests
                     CollectionAssert.AreEquivalent(new[] { "@", "#" }, columnar[column]);
                 }
             }
-        }
-
-        [TestMethod]
-        public void Equals_Other_Columnar()
-        {
-            var columnar1 = NewColumnar(_data);
-            var columnar2 = NewColumnar(_data);
-
-            Assert.IsTrue(columnar1.Equals(columnar2));
-        }
-
-        [TestMethod]
-        public void Equals_Other_Object()
-        {
-            var columnar1 = NewColumnar(_data);
-            var columnar2 = NewColumnar(_data);
-
-            Assert.IsTrue(columnar1.Equals((object)columnar2));
-        }
-
-        [TestMethod]
-        public void HashCode_Matches_Other()
-        {
-            var columnar1 = NewColumnar(_data);
-            var columnar2 = NewColumnar(_data);
-
-            Assert.AreEqual(columnar1.GetHashCode(), columnar2.GetHashCode());
         }
 
         [TestMethod]

@@ -37,52 +37,12 @@ namespace HashFields.Data
             }
         }
 
-        public void Remove(params string[] columns)
+        public void Apply(Func<string, string> func, params string[] columns)
         {
             foreach (var column in _headers.Intersect(columns).ToArray())
             {
-                _headers.Remove(column);
-                _data.Remove(column);
+                _data[column] = _data[column].ConvertAll(s => func(s));
             }
-        }
-
-        private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream)
-        {
-            var header = new List<string>();
-            var columnar = new Dictionary<int, List<string>>();
-            var parser = new TextFieldParser(stream);
-
-            parser.SetDelimiters(new[] { "," });
-
-            // first row assumed to be the header
-            header = parser.ReadFields().ToList();
-
-            foreach (var field in header)
-            {
-                // internally track the index to ensure order is maintained
-                columnar.Add(header.IndexOf(field), new List<string>());
-            }
-
-            while (!parser.EndOfData)
-            {
-                // read the next line of data
-                // add each field's value to the corresponding column list
-                var fields = parser.ReadFields();
-
-                foreach (var key in columnar.Keys)
-                {
-                    columnar[key].Add(fields[key]);
-                }
-            }
-
-            // convert index number back into header value
-            return new Tuple<List<string>, Dictionary<string, List<string>>>(
-                header,
-                columnar.ToDictionary(
-                    kvp => header[kvp.Key],
-                    kvp => kvp.Value
-                )
-            );
         }
 
         public bool Equals(Columnar other)
@@ -138,6 +98,54 @@ namespace HashFields.Data
                 }
             }
             return hashcode.ToHashCode();
+        }
+
+        public void Remove(params string[] columns)
+        {
+            foreach (var column in _headers.Intersect(columns).ToArray())
+            {
+                _headers.Remove(column);
+                _data.Remove(column);
+            }
+        }
+
+        private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream)
+        {
+            var header = new List<string>();
+            var columnar = new Dictionary<int, List<string>>();
+            var parser = new TextFieldParser(stream);
+
+            parser.SetDelimiters(new[] { "," });
+
+            // first row assumed to be the header
+            header = parser.ReadFields().ToList();
+
+            foreach (var field in header)
+            {
+                // internally track the index to ensure order is maintained
+                columnar.Add(header.IndexOf(field), new List<string>());
+            }
+
+            while (!parser.EndOfData)
+            {
+                // read the next line of data
+                // add each field's value to the corresponding column list
+                var fields = parser.ReadFields();
+
+                foreach (var key in columnar.Keys)
+                {
+                    columnar[key].Add(fields[key]);
+                }
+            }
+
+            // convert index number back into header value
+            return new Tuple<List<string>, Dictionary<string, List<string>>>(
+                header,
+                columnar.ToDictionary(
+                    kvp => header[kvp.Key],
+                    kvp => kvp.Value
+                )
+            );
         }
     }
 }
