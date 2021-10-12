@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,6 +58,28 @@ namespace HashFields.Cli.Tests
         }
 
         [TestMethod]
+        public void InputStream_File()
+        {
+            var tempFile = Path.GetTempFileName();
+
+            var configData = new Dictionary<string, string>()
+            {
+                ["StreamOptions:Input:Channel"] = tempFile,
+                ["StreamOptions:Input:Type"] = "File",
+            };
+
+            var config = GetInMemoryConfigRoot(configData);
+
+            var streamOptions = GetStreamOptions(config);
+            using var stream = streamOptions.InputStream();
+
+            Assert.IsNotNull(stream);
+            Assert.IsTrue(stream.CanRead);
+
+            File.Delete(tempFile);
+        }
+
+        [TestMethod]
         public void InputStream_StdIn()
         {
             var configData = new Dictionary<string, string>()
@@ -96,6 +119,28 @@ namespace HashFields.Cli.Tests
             var streamOptions = GetStreamOptions();
 
             _ = streamOptions.OutputStream();
+        }
+
+        [TestMethod]
+        public void OutputStream_File()
+        {
+            var tempFile = Path.GetTempFileName();
+
+            var configData = new Dictionary<string, string>()
+            {
+                ["StreamOptions:Output:Channel"] = tempFile,
+                ["StreamOptions:Output:Type"] = "File",
+            };
+
+            var config = GetInMemoryConfigRoot(configData);
+
+            var streamOptions = GetStreamOptions(config);
+            using var stream = streamOptions.OutputStream();
+
+            Assert.IsNotNull(stream);
+            Assert.IsTrue(stream.CanWrite);
+
+            File.Delete(tempFile);
         }
 
         [TestMethod]

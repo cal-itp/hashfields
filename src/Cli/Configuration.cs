@@ -44,14 +44,16 @@ namespace HashFields.Cli
 
         public Stream InputStream() => Input.Type switch
         {
+            nameof(Types.File) => File.OpenRead(Input.Channel),
             nameof(Types.StdIn) => Console.OpenStandardInput(),
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException()
         };
 
         public Stream OutputStream() => Output.Type switch
         {
+            nameof(Types.File) => File.OpenWrite(Output.Channel),
             nameof(Types.StdOut) => Console.OpenStandardOutput(),
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException()
         };
 
         public Options Output { get; set; }
