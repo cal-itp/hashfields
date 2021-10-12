@@ -5,12 +5,12 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HashFields.Cli.Tests
+namespace HashFields.Cli.Options.Tests
 {
     [TestClass]
     public class DataOptionsTests
     {
-        private IConfigurationRoot _configuration;
+        private DataOptions _options;
 
         [TestInitialize]
         public void Init()
@@ -26,18 +26,17 @@ namespace HashFields.Cli.Tests
                 ["DataOptions:Skip:2"] = "3"
             };
 
-            _configuration = new ConfigurationBuilder().AddInMemoryCollection(config).Build();
+            _options = new ConfigurationBuilder()
+                        .AddInMemoryCollection(config)
+                        .Build()
+                        .GetSection(DataOptions.ConfigurationSectionName)
+                        .Get<DataOptions>();
         }
-
-        private DataOptions GetDataOptions(IConfigurationRoot config = null) =>
-            (config ?? _configuration).GetSection(DataOptions.ConfigurationSectionName).Get<DataOptions>();
 
         [TestMethod]
         public void Delimiter()
         {
-            var dataOptions = GetDataOptions();
-
-            Assert.AreEqual("delim", dataOptions.Delimiter);
+            Assert.AreEqual("delim", _options.Delimiter);
         }
 
         [TestMethod]
@@ -56,17 +55,13 @@ namespace HashFields.Cli.Tests
         [TestMethod]
         public void Drop()
         {
-            var dataOptions = GetDataOptions();
-
-            Assert.IsTrue(new[] { "a", "b" }.SequenceEqual(dataOptions.Drop));
+            Assert.IsTrue(new[] { "a", "b" }.SequenceEqual(_options.Drop));
         }
 
         [TestMethod]
         public void HashAlgorithm()
         {
-            var dataOptions = GetDataOptions();
-
-            Assert.AreEqual("algo", dataOptions.HashAlgorithm);
+            Assert.AreEqual("algo", _options.HashAlgorithm);
         }
 
         [TestMethod]
@@ -85,9 +80,7 @@ namespace HashFields.Cli.Tests
         [TestMethod]
         public void Skip()
         {
-            var dataOptions = GetDataOptions();
-
-            Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(dataOptions.Skip));
+            Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(_options.Skip));
         }
     }
 }
