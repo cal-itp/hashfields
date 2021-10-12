@@ -25,6 +25,10 @@ namespace HashFields.Cli
                             .Bind(context.Configuration.GetSection(DataOptions.ConfigurationSectionName))
                             .ValidateDataAnnotations();
 
+                    services.AddOptions<StreamOptions>()
+                            .Bind(context.Configuration.GetSection(StreamOptions.ConfigurationSectionName))
+                            .ValidateDataAnnotations();
+
                     services.AddHostedService<Worker>();
                 });
     }

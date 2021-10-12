@@ -17,4 +17,26 @@ namespace HashFields.Cli
 
         public IEnumerable<string> Skip { get; set; }
     }
+
+    internal class StreamOptions
+    {
+        public const string ConfigurationSectionName = nameof(StreamOptions);
+
+        public enum Types
+        {
+            File,
+            StdIn,
+            StdOut,
+        }
+
+        public class Options
+        {
+            public string Channel { get; set; }
+            public string Type { get; set; }
+        }
+
+        public Options Input { get; set; }
+
+        public Options Output { get; set; }
+    }
 }

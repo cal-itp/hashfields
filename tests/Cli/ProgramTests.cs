@@ -19,11 +19,23 @@ namespace HashFields.Cli.Tests
         {
             var host = NewHost(emptyArgs);
 
-            var dataOptionsService = host.Services.GetRequiredService<IOptions<DataOptions>>();
+            var optionsService = host.Services.GetRequiredService<IOptions<DataOptions>>();
 
-            Assert.IsNotNull(dataOptionsService);
-            Assert.IsNotNull(dataOptionsService.Value);
-            Assert.IsInstanceOfType(dataOptionsService.Value, typeof(DataOptions));
+            Assert.IsNotNull(optionsService);
+            Assert.IsNotNull(optionsService.Value);
+            Assert.IsInstanceOfType(optionsService.Value, typeof(DataOptions));
+        }
+
+        [TestMethod]
+        public void Program_Registers_StreamOptions()
+        {
+            var host = NewHost(emptyArgs);
+
+            var optionsService = host.Services.GetRequiredService<IOptions<StreamOptions>>();
+
+            Assert.IsNotNull(optionsService);
+            Assert.IsNotNull(optionsService.Value);
+            Assert.IsInstanceOfType(optionsService.Value, typeof(StreamOptions));
         }
     }
 }

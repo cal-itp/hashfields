@@ -24,6 +24,10 @@ namespace HashFields.Cli.Tests
                 ["DataOptions:Skip:0"] = "1",
                 ["DataOptions:Skip:1"] = "2",
                 ["DataOptions:Skip:2"] = "3",
+                ["StreamOptions:Input:Channel"] = "input:channel",
+                ["StreamOptions:Input:Type"] = "input:type",
+                ["StreamOptions:Output:Channel"] = "output:channel",
+                ["StreamOptions:Output:Type"] = "output:type",
             };
 
             _configuration = new ConfigurationBuilder().AddInMemoryCollection(config).Build();
@@ -31,6 +35,9 @@ namespace HashFields.Cli.Tests
 
         private DataOptions GetDataOptions() =>
             _configuration.GetSection(DataOptions.ConfigurationSectionName).Get<DataOptions>();
+
+        private StreamOptions GetStreamOptions() =>
+            _configuration.GetSection(StreamOptions.ConfigurationSectionName).Get<StreamOptions>();
 
         [TestMethod]
         public void DataOptions_Delimiter()
@@ -88,6 +95,38 @@ namespace HashFields.Cli.Tests
             var dataOptions = GetDataOptions();
 
             Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(dataOptions.Skip));
+        }
+
+        [TestMethod]
+        public void StreamOptions_Input_Source()
+        {
+            var streamOptions = GetStreamOptions();
+
+            Assert.AreEqual("input:channel", streamOptions.Input.Channel);
+        }
+
+        [TestMethod]
+        public void StreamOptions_Input_Type()
+        {
+            var streamOptions = GetStreamOptions();
+
+            Assert.AreEqual("input:type", streamOptions.Input.Type);
+        }
+
+        [TestMethod]
+        public void StreamOptions_Output_Source()
+        {
+            var streamOptions = GetStreamOptions();
+
+            Assert.AreEqual("output:channel", streamOptions.Output.Channel);
+        }
+
+        [TestMethod]
+        public void StreamOptions_Output_Type()
+        {
+            var streamOptions = GetStreamOptions();
+
+            Assert.AreEqual("output:type", streamOptions.Output.Type);
         }
     }
 }
