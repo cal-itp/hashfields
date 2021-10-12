@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HashFields.Data.Tests
@@ -14,7 +15,7 @@ namespace HashFields.Data.Tests
             var csv = new Csv(new MemoryStream(Array.Empty<byte>()));
 
             Assert.IsNotNull(csv);
-            Assert.IsNotNull(csv.Columnar);
+            Assert.IsNotNull(csv.Header);
         }
 
         [TestMethod]
@@ -23,7 +24,7 @@ namespace HashFields.Data.Tests
             var csv = new Csv("");
 
             Assert.IsNotNull(csv);
-            Assert.IsNotNull(csv.Columnar);
+            Assert.IsNotNull(csv.Header);
         }
 
         [TestMethod]
@@ -32,7 +33,7 @@ namespace HashFields.Data.Tests
             var csv = new Csv((Stream)null);
 
             Assert.IsNotNull(csv);
-            Assert.IsNotNull(csv.Columnar);
+            Assert.IsNotNull(csv.Header);
         }
 
         [TestMethod]
@@ -41,18 +42,18 @@ namespace HashFields.Data.Tests
             var csv = new Csv((string)null);
 
             Assert.IsNotNull(csv);
-            Assert.IsNotNull(csv.Columnar);
+            Assert.IsNotNull(csv.Header);
         }
 
         [TestMethod]
         public void New_Stream_Columnar()
         {
             var data = Encoding.UTF8.GetBytes("1, 2, 3");
-            var expected = new Columnar(new MemoryStream(data));
+            var expected = new Csv.Columnar(new MemoryStream(data));
 
             var csv = new Csv(new MemoryStream(data));
 
-            Assert.AreEqual(expected, csv.Columnar);
+            Assert.AreEqual(expected, csv._columnar);
         }
 
         [TestMethod]
@@ -60,11 +61,11 @@ namespace HashFields.Data.Tests
         {
             const string text = "1, 2, 3";
             var data = Encoding.UTF8.GetBytes(text);
-            var expected = new Columnar(new MemoryStream(data));
+            var expected = new Csv.Columnar(new MemoryStream(data));
 
             var csv = new Csv(text);
 
-            Assert.AreEqual(expected, csv.Columnar);
+            Assert.AreEqual(expected, csv._columnar);
         }
 
         [TestMethod]

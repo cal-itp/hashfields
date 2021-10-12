@@ -17,7 +17,7 @@ namespace HashFields.Data.Tests
             3, c, #"
         );
 
-        private static Columnar NewColumnar(byte[] data) => new(new MemoryStream(data));
+        private static Csv.Columnar NewColumnar(byte[] data) => new(new MemoryStream(data));
 
         [TestMethod]
         public void Apply_Modifies_Columns()
