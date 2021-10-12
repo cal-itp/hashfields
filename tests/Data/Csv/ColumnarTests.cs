@@ -6,7 +6,7 @@ using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HashFields.Data.Tests
+namespace HashFields.Data.Csv.Tests
 {
     [TestClass]
     public class ColumnarTests
@@ -17,7 +17,7 @@ namespace HashFields.Data.Tests
             3, c, #"
         );
 
-        private static Csv.Columnar NewColumnar(byte[] data, string delimiter = ",") => new(new MemoryStream(data), delimiter);
+        private static Columnar NewColumnar(byte[] data, string delimiter = ",") => new(new MemoryStream(data), delimiter);
 
         [TestMethod]
         public void Apply_Modifies_Columns()

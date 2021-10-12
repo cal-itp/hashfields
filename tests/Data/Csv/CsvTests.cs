@@ -3,9 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using HashFields.Data.Tests.Fakes;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HashFields.Data.Tests
+namespace HashFields.Data.Csv.Tests
 {
     [TestClass]
     public class CsvTests
@@ -30,7 +32,7 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void New_StreamEmpty_InitializesEmpty()
         {
-            var csv = new Csv(new MemoryStream(Array.Empty<byte>()));
+            var csv = new Csv(new MemoryStreamProvider(Array.Empty<byte>()));
 
             Assert.IsNotNull(csv);
             Assert.IsNotNull(csv.Header);
@@ -39,7 +41,7 @@ namespace HashFields.Data.Tests
         [TestMethod]
         public void New_StreamNull_InitializesEmpty()
         {
-            var csv = new Csv((Stream)null);
+            var csv = new Csv((MemoryStreamProvider)null);
 
             Assert.IsNotNull(csv);
             Assert.IsNotNull(csv.Header);
@@ -67,9 +69,9 @@ namespace HashFields.Data.Tests
         public void New_Stream_Columnar()
         {
             var data = Encoding.UTF8.GetBytes("1, 2, 3");
-            var expected = new Csv.Columnar(new MemoryStream(data), ",");
+            var expected = new Columnar(new MemoryStream(data), ",");
 
-            var csv = new Csv(new MemoryStream(data));
+            var csv = new Csv(new MemoryStreamProvider(data));
 
             Assert.AreEqual(expected, csv._columnar);
         }
@@ -79,7 +81,7 @@ namespace HashFields.Data.Tests
         {
             const string text = "1, 2, 3";
             var data = Encoding.UTF8.GetBytes(text);
-            var expected = new Csv.Columnar(new MemoryStream(data), ",");
+            var expected = new Columnar(new MemoryStream(data), ",");
 
             var csv = new Csv(text);
 
@@ -124,8 +126,7 @@ namespace HashFields.Data.Tests
         {
             var data = Encoding.UTF8.GetBytes("1,2,3\na,b,c\n!,@,#\n");
 
-            using var source = new MemoryStream(data);
-            var csv = new Csv(source);
+            var csv = new Csv(new MemoryStreamProvider(data));
 
             var destination = new MemoryStream();
             CollectionAssert.AreEquivalent(destination.ToArray(), Array.Empty<byte>());
