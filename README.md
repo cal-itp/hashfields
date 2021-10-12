@@ -14,16 +14,16 @@ Cross-platform command-line tool built using [.NET Core 5.0](https://dotnet.micr
 
 Use the *Task Explorer* or enter the following commands:
 
-### Run all tests once
+### Run tests once
 
 * `Ctrl/Cmd+P` to bring up the Command Palette
-* Type `task run test task` and hit `Enter`
+* Type `tasks: run test task` and hit `Enter`
 
-### Watch/Run project-specific tests
+### Watch/Run tests
 
 * `Ctrl/Cmd+P` to bring up the Command Palette
-* Type `task run` and hit `Enter`
-* Type `watch-test-X` where `X` is the project, and hit `Enter`
+* Type `tasks: run task` and hit `Enter`
+* Type or select `watch-test` and hit `Enter`
 * Edit a `src` or `tests` file to see the solution rebuild and tests rerun
 
 ## Deploy a self-contained app

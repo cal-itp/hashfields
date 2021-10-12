@@ -59,7 +59,8 @@
       "group": {
         "kind": "test",
         "isDefault": true
-      }
+      },
+      "isTestCommand": true
     },
     {
       "label": "watch-test-cli",
@@ -73,7 +74,8 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "problemMatcher": "$msCompile"
+      "problemMatcher": "$msCompile",
+      "group": "test",
     },
     {
       "label": "watch-test-data",
@@ -87,7 +89,17 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "problemMatcher": "$msCompile"
-    }
+      "problemMatcher": "$msCompile",
+      "group": "test",
+    },
+    {
+      "label": "watch-test",
+      "dependsOn": [
+        "watch-test-cli",
+        "watch-test-data",
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "test",
+    },
   ]
 }
