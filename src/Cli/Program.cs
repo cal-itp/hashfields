@@ -1,6 +1,4 @@
-using System;
-using System.Threading.Tasks;
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,15 +12,19 @@ namespace HashFields.Cli
             CreateHostBuilder(args).Build().Run();
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
+        internal static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
                 })
-                .ConfigureServices(services =>
+                .ConfigureServices((context, services) =>
                 {
+                    services.AddOptions<DataOptions>()
+                            .Bind(context.Configuration.GetSection(DataOptions.ConfigurationSectionName))
+                            .ValidateDataAnnotations();
+
                     services.AddHostedService<Worker>();
                 });
     }
