@@ -10,9 +10,35 @@ namespace HashFields.Data.Tests
     public class CsvTests
     {
         [TestMethod]
+        public void New_Delimiter_InitializesDelimiter()
+        {
+            const string delimiter = "delim";
+            var csv = new Csv("", delimiter);
+
+            Assert.AreEqual(delimiter, csv.Delimiter);
+        }
+
+        [TestMethod]
+        public void New_DelimiterNull_InitializesDefaultDelimiter()
+        {
+            var csv = new Csv("");
+
+            Assert.AreEqual(Csv.DefaultDelimiter, csv.Delimiter);
+        }
+
+        [TestMethod]
         public void New_StreamEmpty_InitializesEmpty()
         {
             var csv = new Csv(new MemoryStream(Array.Empty<byte>()));
+
+            Assert.IsNotNull(csv);
+            Assert.IsNotNull(csv.Header);
+        }
+
+        [TestMethod]
+        public void New_StreamNull_InitializesEmpty()
+        {
+            var csv = new Csv((Stream)null);
 
             Assert.IsNotNull(csv);
             Assert.IsNotNull(csv.Header);
@@ -28,16 +54,7 @@ namespace HashFields.Data.Tests
         }
 
         [TestMethod]
-        public void New_NullStream_InitializesEmpty()
-        {
-            var csv = new Csv((Stream)null);
-
-            Assert.IsNotNull(csv);
-            Assert.IsNotNull(csv.Header);
-        }
-
-        [TestMethod]
-        public void New_NullText_InitializesEmpty()
+        public void New_TextNull_InitializesEmpty()
         {
             var csv = new Csv((string)null);
 
@@ -49,7 +66,7 @@ namespace HashFields.Data.Tests
         public void New_Stream_Columnar()
         {
             var data = Encoding.UTF8.GetBytes("1, 2, 3");
-            var expected = new Csv.Columnar(new MemoryStream(data));
+            var expected = new Csv.Columnar(new MemoryStream(data), ",");
 
             var csv = new Csv(new MemoryStream(data));
 
@@ -61,7 +78,7 @@ namespace HashFields.Data.Tests
         {
             const string text = "1, 2, 3";
             var data = Encoding.UTF8.GetBytes(text);
-            var expected = new Csv.Columnar(new MemoryStream(data));
+            var expected = new Csv.Columnar(new MemoryStream(data), ",");
 
             var csv = new Csv(text);
 

@@ -10,25 +10,33 @@ namespace HashFields.Data
 {
     public class Csv : IDisposable
     {
+        public static readonly string DefaultDelimiter = ",";
+
         private readonly Stream _stream;
 
         internal readonly Columnar _columnar;
 
         public List<string> Header => _columnar.Header.ToList();
 
-        public Csv(Stream stream)
+        public string Delimiter { get; set; } = DefaultDelimiter;
+
+        public Csv(Stream stream, string delimiter = null)
         {
+            Delimiter = delimiter ?? Delimiter;
+
             _stream = stream;
-            _columnar = new Columnar(_stream);
+            _columnar = new Columnar(_stream, Delimiter);
         }
 
-        public Csv(string csvText)
+        public Csv(string csvText, string delimiter = null)
         {
             var text = (csvText ?? String.Empty).Trim();
             var data = Encoding.UTF8.GetBytes(text);
 
+            Delimiter = delimiter ?? Delimiter;
+
             _stream = new MemoryStream(data);
-            _columnar = new Columnar(_stream);
+            _columnar = new Columnar(_stream, Delimiter);
         }
 
         public void Apply(Func<string, string> func, params string[] columns)
@@ -67,15 +75,15 @@ namespace HashFields.Data
             public List<string> Header { get => _headers.ToList(); }
             public List<List<string>> Columns { get => _data.Values.ToList(); }
 
-            public Columnar() : this(null)
+            public Columnar(string delimiter) : this(null, delimiter)
             {
             }
 
-            public Columnar(Stream stream)
+            public Columnar(Stream stream, string delimiter)
             {
                 if (stream?.Length > 0)
                 {
-                    var tuple = Parse(stream);
+                    var tuple = Parse(stream, delimiter);
 
                     _headers = tuple.Item1;
                     _data = tuple.Item2;
@@ -182,13 +190,13 @@ namespace HashFields.Data
                 return rows;
             }
 
-            private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream)
+            private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream, string delimiter)
             {
                 var header = new List<string>();
                 var columnar = new Dictionary<int, List<string>>();
                 var parser = new TextFieldParser(stream);
 
-                parser.SetDelimiters(new[] { "," });
+                parser.SetDelimiters(new[] { delimiter });
 
                 // first row assumed to be the header
                 header = parser.ReadFields().ToList();

@@ -17,7 +17,7 @@ namespace HashFields.Data.Tests
             3, c, #"
         );
 
-        private static Csv.Columnar NewColumnar(byte[] data) => new(new MemoryStream(data));
+        private static Csv.Columnar NewColumnar(byte[] data, string delimiter = ",") => new(new MemoryStream(data), delimiter);
 
         [TestMethod]
         public void Apply_Modifies_Columns()
@@ -88,33 +88,6 @@ namespace HashFields.Data.Tests
             Assert.AreEqual(columnar1.GetHashCode(), columnar2.GetHashCode());
         }
 
-        [TestMethod()]
-        public void New_Empty_Initializes_Empty()
-        {
-            var columnar = NewColumnar(Array.Empty<byte>());
-
-            Assert.IsNotNull(columnar);
-            Assert.IsNotNull(columnar.Header);
-            Assert.IsNotNull(columnar.Columns);
-        }
-
-        [TestMethod]
-        public void New_SingleRow_Initializes_HeaderAndColumns()
-        {
-            var data = Encoding.UTF8.GetBytes("1, 2, 3");
-            var columnar = NewColumnar(data);
-
-            var header = columnar.Header.ToArray();
-            CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, header);
-
-            Assert.AreEqual(3, columnar.Columns.Count);
-
-            foreach (var column in columnar.Columns)
-            {
-                CollectionAssert.AreEquivalent(new List<string>(), column);
-            }
-        }
-
         [TestMethod]
         public void New_BlankLines_Trimmed()
         {
@@ -139,8 +112,18 @@ namespace HashFields.Data.Tests
             }
         }
 
+        [TestMethod()]
+        public void New_Empty_Initializes_Empty()
+        {
+            var columnar = NewColumnar(Array.Empty<byte>());
+
+            Assert.IsNotNull(columnar);
+            Assert.IsNotNull(columnar.Header);
+            Assert.IsNotNull(columnar.Columns);
+        }
+
         [TestMethod]
-        public void New_MultiRow_Returns_DictWithKeysAndLists()
+        public void New_MultiRow_Initializes_HeaderAndColumns()
         {
             var columnar = NewColumnar(_data);
 
@@ -165,6 +148,41 @@ namespace HashFields.Data.Tests
                 {
                     CollectionAssert.AreEquivalent(new[] { "@", "#" }, columnar[column]);
                 }
+            }
+        }
+
+        [TestMethod]
+        public void New_MultiRow_Delimiter_Initializes_HeaderAndColumns()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+            2<>3<>5
+            4<>6<>10
+            6<>9<>15
+            ");
+
+            const string delimiter = "<>";
+            var columnar = NewColumnar(data, delimiter);
+
+            foreach (var elem in columnar["2"].Union(columnar["3"].Union(columnar["5"])))
+            {
+                CollectionAssert.Contains(new[] { "4", "6", "9", "10", "15" }, elem);
+            }
+        }
+
+        [TestMethod]
+        public void New_SingleRow_Initializes_HeaderAndColumns()
+        {
+            var data = Encoding.UTF8.GetBytes("1, 2, 3");
+            var columnar = NewColumnar(data);
+
+            var header = columnar.Header.ToArray();
+            CollectionAssert.AreEquivalent(new[] { "1", "2", "3" }, header);
+
+            Assert.AreEqual(3, columnar.Columns.Count);
+
+            foreach (var column in columnar.Columns)
+            {
+                CollectionAssert.AreEquivalent(new List<string>(), column);
             }
         }
 
