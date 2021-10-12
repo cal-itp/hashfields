@@ -9,7 +9,6 @@ namespace HashFields.Cli
 {
     internal class Worker : IHostedService
     {
-
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger<Worker> _logger;
 
@@ -21,15 +20,24 @@ namespace HashFields.Cli
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Hello HashFields.Cli");
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogInformation("Hello HashFields.Cli");
+                _appLifetime.StopApplication();
 
-            _appLifetime.StopApplication();
+                return Task.CompletedTask;
+            }
 
-            return Task.CompletedTask;
+            return Task.FromCanceled(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled(cancellationToken);
+            }
+
             _logger.LogInformation("Goodbye HashFields.Cli");
 
             return Task.CompletedTask;
