@@ -8,17 +8,17 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace HashFields.Data
 {
-    public class Csv : IDisposable
+    public class Csv : IColumnOperator, IStreamWriter
     {
-        public static readonly string DefaultDelimiter = ",";
+        internal static readonly string DefaultDelimiter = ",";
 
         private readonly Stream _stream;
 
         internal readonly Columnar _columnar;
 
-        public List<string> Header => _columnar.Header.ToList();
+        internal string Delimiter { get; set; } = DefaultDelimiter;
 
-        public string Delimiter { get; set; } = DefaultDelimiter;
+        public List<string> Header => _columnar.Header.ToList();
 
         public Csv(Stream stream, string delimiter = null)
         {

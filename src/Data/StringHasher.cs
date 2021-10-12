@@ -5,7 +5,12 @@ using System.Text;
 
 namespace HashFields.Data
 {
-    public class StringHasher
+    public interface IStringHasher
+    {
+        string Hash(string input);
+    }
+
+    public class StringHasher : IStringHasher
     {
         public static readonly string[] SupportedAlgorithms =
         {
