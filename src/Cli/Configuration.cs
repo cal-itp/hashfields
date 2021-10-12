@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 using HashFields.Data;
@@ -32,10 +35,24 @@ namespace HashFields.Cli
         public class Options
         {
             public string Channel { get; set; }
+
+            [EnumDataType(typeof(Types))]
             public string Type { get; set; }
         }
 
         public Options Input { get; set; }
+
+        public Stream InputStream() => Input.Type switch
+        {
+            nameof(Types.StdIn) => Console.OpenStandardInput(),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+        public Stream OutputStream() => Output.Type switch
+        {
+            nameof(Types.StdOut) => Console.OpenStandardOutput(),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
 
         public Options Output { get; set; }
     }

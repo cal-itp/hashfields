@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Microsoft.Extensions.Configuration;
@@ -21,8 +22,11 @@ namespace HashFields.Cli.Tests
                 ["StreamOptions:Output:Type"] = "output:type",
             };
 
-            _configuration = new ConfigurationBuilder().AddInMemoryCollection(config).Build();
+            _configuration = GetInMemoryConfigRoot(config);
         }
+
+        private static IConfigurationRoot GetInMemoryConfigRoot(IEnumerable<KeyValuePair<string, string>> config) =>
+            new ConfigurationBuilder().AddInMemoryCollection(config).Build();
 
         private StreamOptions GetStreamOptions(IConfigurationRoot config = null) =>
             (config ?? _configuration).GetSection(StreamOptions.ConfigurationSectionName).Get<StreamOptions>();
@@ -44,6 +48,32 @@ namespace HashFields.Cli.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void InputStream_InvalidType_Throws()
+        {
+            var streamOptions = GetStreamOptions();
+
+            _ = streamOptions.InputStream();
+        }
+
+        [TestMethod]
+        public void InputStream_StdIn()
+        {
+            var configData = new Dictionary<string, string>()
+            {
+                ["StreamOptions:Input:Type"] = "StdIn",
+            };
+
+            var config = GetInMemoryConfigRoot(configData);
+
+            var streamOptions = GetStreamOptions(config);
+            using var stream = streamOptions.InputStream();
+
+            Assert.IsNotNull(stream);
+            Assert.IsTrue(stream.CanRead);
+        }
+
+        [TestMethod]
         public void Output_Channel()
         {
             var streamOptions = GetStreamOptions();
@@ -57,6 +87,32 @@ namespace HashFields.Cli.Tests
             var streamOptions = GetStreamOptions();
 
             Assert.AreEqual("output:type", streamOptions.Output.Type);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void OutputStream_InvalidType_Throws()
+        {
+            var streamOptions = GetStreamOptions();
+
+            _ = streamOptions.OutputStream();
+        }
+
+        [TestMethod]
+        public void OutputStream_StdOut()
+        {
+            var configData = new Dictionary<string, string>()
+            {
+                ["StreamOptions:Output:Type"] = "StdOut",
+            };
+
+            var config = GetInMemoryConfigRoot(configData);
+
+            var streamOptions = GetStreamOptions(config);
+            using var stream = streamOptions.OutputStream();
+
+            Assert.IsNotNull(stream);
+            Assert.IsTrue(stream.CanWrite);
         }
     }
 }
