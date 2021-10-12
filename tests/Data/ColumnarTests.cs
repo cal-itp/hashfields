@@ -186,25 +186,33 @@ namespace HashFields.Data.Tests
             }
         }
 
-        [TestMethod]
-        public void Remove_Removes_Columns()
+        [DataTestMethod]
+        [DataRow(new[] { "1", "a" })]
+        [DataRow(new[] { "1", "!" })]
+        [DataRow(new[] { "a", "!" })]
+        public void Remove_Removes_Columns(string[] columns)
         {
             var columnar = NewColumnar(_data);
 
-            columnar.Remove("1", "!");
+            var expectedHeader = columnar.Header.Except(columns).Single();
+            var expectedColumn = columnar[expectedHeader];
+
+            columnar.Remove(columns);
 
             Assert.AreEqual(1, columnar.Header.Count);
             Assert.AreEqual(1, columnar.Columns.Count);
-            Assert.IsTrue(columnar.Header.Contains("a"));
-            CollectionAssert.AreEquivalent(columnar.Columns[0], new string[] { "b", "c" }.ToList());
+            Assert.IsTrue(columnar.Header.Contains(expectedHeader));
+            CollectionAssert.AreEquivalent(columnar.Columns[0], expectedColumn);
         }
 
-        [TestMethod]
-        public void Remove_DoesNotRemove_NonExistentColumns()
+        [DataTestMethod]
+        [DataRow(new string[0])]
+        [DataRow(new[] { "z", "&" })]
+        public void Remove_DoesNotRemove_EmptyOrNonExistentColumns(string[] columns)
         {
             var columnar = NewColumnar(_data);
 
-            columnar.Remove("z", "&");
+            columnar.Remove(columns);
 
             Assert.AreEqual(3, columnar.Header.Count);
             Assert.AreEqual(3, columnar.Columns.Count);

@@ -52,7 +52,7 @@ namespace HashFields.Data
 
         public void Remove(params string[] columns)
         {
-            _columnar.Remove(columns);
+            _columnar.Remove(columns ?? Array.Empty<string>());
         }
 
         public void Write(Stream destination)

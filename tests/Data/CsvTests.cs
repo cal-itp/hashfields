@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -83,6 +84,39 @@ namespace HashFields.Data.Tests
             var csv = new Csv(text);
 
             Assert.AreEqual(expected, csv._columnar);
+        }
+
+        [DataTestMethod]
+        [DataRow(new[] { "1", "2" })]
+        [DataRow(new[] { "1", "3" })]
+        [DataRow(new[] { "2", "3" })]
+        public void Remove_Removes_Column(string[] columns)
+        {
+            const string text = "1, 2, 3";
+
+            var expectedHeader = text.Split(",", StringSplitOptions.TrimEntries)
+                                     .Except(columns)
+                                     .ToArray();
+
+            var csv = new Csv(text);
+            csv.Remove(columns);
+
+            CollectionAssert.AreEqual(expectedHeader, csv.Header);
+        }
+
+        [DataTestMethod]
+        [DataRow(new string[0])]
+        [DataRow(null)]
+        public void Remove_DoesNotRemove_EmptyOrNullHeaders(string[] columns)
+        {
+            const string text = "1, 2, 3";
+
+            var expectedHeader = new[] { "1", "2", "3" };
+
+            var csv = new Csv(text);
+            csv.Remove(columns);
+
+            CollectionAssert.AreEqual(expectedHeader, csv.Header);
         }
 
         [TestMethod]
