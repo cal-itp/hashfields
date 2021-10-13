@@ -35,7 +35,7 @@ namespace HashFields.Cli
             }
             else
             {
-                _logger.LogInformation("Hello HashFields.Cli");
+                _logger.LogInformation("Starting");
 
                 try
                 {
@@ -44,7 +44,7 @@ namespace HashFields.Cli
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "HashFields.Cli had a problem");
+                    _logger.LogError(ex, "Runtime exception caught");
                     task = Task.FromException(ex);
                 }
                 finally
@@ -63,7 +63,7 @@ namespace HashFields.Cli
                 return Task.FromCanceled(cancellationToken);
             }
 
-            _logger.LogInformation("Goodbye HashFields.Cli");
+            _logger.LogInformation("Finished");
 
             return Task.CompletedTask;
         }
