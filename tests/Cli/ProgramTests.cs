@@ -1,7 +1,8 @@
 using System;
 
 using HashFields.Cli.Options;
-
+using HashFields.Cli.Services;
+using HashFields.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -16,28 +17,54 @@ namespace HashFields.Cli.Tests
 
         private static IHost NewHost(string[] args) => Program.CreateHostBuilder(args).Build();
 
-        [TestMethod]
-        public void Program_Registers_DataOptions()
+        [DataTestMethod]
+        [DataRow(typeof(IOptions<DataOptions>))]
+        [DataRow(typeof(IOptions<StreamOptions>))]
+        [DataRow(typeof(IConsoleService))]
+        [DataRow(typeof(IFileService))]
+        [DataRow(typeof(IStreamProvider))]
+        [DataRow(typeof(OptionsInputStreamProvider))]
+        [DataRow(typeof(OptionsOutputStreamProvider))]
+        [DataRow(typeof(IColumnOperator))]
+        [DataRow(typeof(IStreamWriter))]
+        [DataRow(typeof(IStringHasher))]
+        public void Registers_Service(Type serviceType)
         {
             var host = NewHost(emptyArgs);
 
-            var optionsService = host.Services.GetRequiredService<IOptions<DataOptions>>();
+            var service = host.Services.GetRequiredService(serviceType);
 
-            Assert.IsNotNull(optionsService);
-            Assert.IsNotNull(optionsService.Value);
-            Assert.IsInstanceOfType(optionsService.Value, typeof(DataOptions));
+            Assert.IsNotNull(service);
         }
 
-        [TestMethod]
-        public void Program_Registers_StreamOptions()
+        [DataTestMethod]
+        [DataRow(typeof(IColumnOperator))]
+        [DataRow(typeof(IStreamWriter))]
+        [DataRow(typeof(IStringHasher))]
+        [DataRow(typeof(OptionsInputStreamProvider))]
+        [DataRow(typeof(OptionsOutputStreamProvider))]
+        public void Registers_As_Singleton(Type serviceType)
         {
             var host = NewHost(emptyArgs);
 
-            var optionsService = host.Services.GetRequiredService<IOptions<StreamOptions>>();
+            var service1 = host.Services.GetRequiredService(serviceType);
+            var service2 = host.Services.GetRequiredService(serviceType);
 
-            Assert.IsNotNull(optionsService);
-            Assert.IsNotNull(optionsService.Value);
-            Assert.IsInstanceOfType(optionsService.Value, typeof(StreamOptions));
+            Assert.AreSame(service1, service2);
+        }
+
+        [DataTestMethod]
+        [DataRow(typeof(IConsoleService))]
+        [DataRow(typeof(IFileService))]
+        [DataRow(typeof(IStreamProvider))]
+        public void Registers_As_Transient(Type serviceType)
+        {
+            var host = NewHost(emptyArgs);
+
+            var service1 = host.Services.GetRequiredService(serviceType);
+            var service2 = host.Services.GetRequiredService(serviceType);
+
+            Assert.AreNotSame(service1, service2);
         }
     }
 }

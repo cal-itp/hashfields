@@ -7,4 +7,17 @@ namespace HashFields.Cli.Services
         Stream OpenRead(string path);
         Stream OpenWrite(string path);
     }
+
+    internal class FileService : IFileService
+    {
+        public Stream OpenRead(string path)
+        {
+            return File.OpenRead(path);
+        }
+
+        public Stream OpenWrite(string path)
+        {
+            return File.OpenWrite(path);
+        }
+    }
 }
