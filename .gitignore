@@ -1,3 +1,8 @@
 bin/
 obj/
+
+*.csv
+!src/Cli/samples/data.csv
+
+appsettings.*.json
 *_crash.*.json

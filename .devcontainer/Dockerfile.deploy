@@ -15,6 +15,9 @@ COPY tests/ tests/
 RUN dotnet restore src/Cli/hashfields.csproj
 RUN dotnet publish -r $target -c Release -o ./out src/Cli/hashfields.csproj
 
+COPY src/Cli/samples/ ./out/samples/
+COPY src/Cli/appsettings.json ./out/appsettings.json
+
 FROM mcr.microsoft.com/dotnet/runtime-deps:$runtime
 
 WORKDIR /hashfields
