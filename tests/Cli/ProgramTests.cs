@@ -28,6 +28,7 @@ namespace HashFields.Cli.Tests
         [DataRow(typeof(IColumnOperator))]
         [DataRow(typeof(IStreamWriter))]
         [DataRow(typeof(IStringHasher))]
+        [DataRow(typeof(HashFieldsService))]
         public void Registers_Service(Type serviceType)
         {
             var host = NewHost(emptyArgs);
@@ -43,6 +44,7 @@ namespace HashFields.Cli.Tests
         [DataRow(typeof(IStringHasher))]
         [DataRow(typeof(OptionsInputStreamProvider))]
         [DataRow(typeof(OptionsOutputStreamProvider))]
+        [DataRow(typeof(HashFieldsService))]
         public void Registers_As_Singleton(Type serviceType)
         {
             var host = NewHost(emptyArgs);

@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using HashFields.Cli.Services;
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,11 +11,16 @@ namespace HashFields.Cli
 {
     internal class Worker : IHostedService
     {
+        private readonly HashFieldsService _hashFields;
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(IHostApplicationLifetime appLifetime, ILogger<Worker> logger)
+        public Worker(
+            HashFieldsService hashFields,
+            IHostApplicationLifetime appLifetime,
+            ILogger<Worker> logger)
         {
+            _hashFields = hashFields ?? throw new ArgumentNullException(nameof(hashFields));
             _appLifetime = appLifetime ?? throw new ArgumentNullException(nameof(appLifetime));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -23,6 +30,9 @@ namespace HashFields.Cli
             if (!cancellationToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Hello HashFields.Cli");
+
+                _hashFields.Run();
+
                 _appLifetime.StopApplication();
 
                 return Task.CompletedTask;

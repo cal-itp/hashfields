@@ -30,7 +30,8 @@ namespace HashFields.Cli
                             .AddSingleton<IStreamWriter, Csv>()
                             .AddSingleton<IStringHasher, StringHasher>()
                             .AddSingleton<OptionsInputStreamProvider>()
-                            .AddSingleton<OptionsOutputStreamProvider>();
+                            .AddSingleton<OptionsOutputStreamProvider>()
+                            .AddSingleton<HashFieldsService>();
 
                     services.AddTransient<IFileService, FileService>()
                             .AddTransient<IStreamProvider, OptionsOutputStreamProvider>()
