@@ -1,35 +1,29 @@
+using System;
 using System.Linq;
 
 using HashFields.Cli.Options;
 using HashFields.Data;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace HashFields.Cli.Services
 {
     internal class HashFieldsService
     {
-        private readonly IColumnOperator _columnOperator;
-
-        private readonly IStreamWriter _streamWriter;
-
-        private readonly IStringHasher _stringHasher;
+        private readonly IServiceProvider _services;
 
         private readonly DataOptions _dataOptions;
 
         private readonly OptionsOutputStreamProvider _optionsStreamService;
 
         public HashFieldsService(
-            IColumnOperator columnOperator,
-            IStreamWriter streamWriter,
-            IStringHasher stringHasher,
+            IServiceProvider services,
             IOptions<DataOptions> dataOptions,
             OptionsOutputStreamProvider optionsStreamService
             )
         {
-            _columnOperator = columnOperator;
-            _streamWriter = streamWriter;
-            _stringHasher = stringHasher;
+            _services = services;
 
             _dataOptions = dataOptions.Value;
             _optionsStreamService = optionsStreamService;
@@ -37,13 +31,18 @@ namespace HashFields.Cli.Services
 
         public void Run()
         {
-            _columnOperator.Remove(_dataOptions.Drop.ToArray());
+            var columnOperator = ActivatorUtilities.CreateInstance<IColumnOperator>(_services, _dataOptions.Delimiter);
+            var stringHasher = ActivatorUtilities.CreateInstance<IStringHasher>(_services, _dataOptions.HashAlgorithm);
+            var streamWriter = ActivatorUtilities.CreateInstance<IStreamWriter>(_services);
 
-            var hashColumns = _columnOperator.Header.Except(_dataOptions.Skip).ToArray();
-            _columnOperator.Apply(_stringHasher.Hash, hashColumns);
+            var dropColumns = _dataOptions.Drop.ToArray();
+            columnOperator.Remove(dropColumns);
+
+            var hashColumns = columnOperator.Header.Except(_dataOptions.Skip).ToArray();
+            columnOperator.Apply(stringHasher.Hash, hashColumns);
 
             using var destination = _optionsStreamService.Get();
-            _streamWriter.Write(destination);
+            streamWriter.Write(destination);
         }
     }
 }
