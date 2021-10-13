@@ -27,18 +27,33 @@ namespace HashFields.Cli
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            if (!cancellationToken.IsCancellationRequested)
+            Task task;
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                task = Task.FromCanceled(cancellationToken);
+            }
+            else
             {
                 _logger.LogInformation("Hello HashFields.Cli");
 
-                _hashFields.Run();
-
-                _appLifetime.StopApplication();
-
-                return Task.CompletedTask;
+                try
+                {
+                    _hashFields.Run();
+                    task = Task.CompletedTask;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "HashFields.Cli had a problem");
+                    task = Task.FromException(ex);
+                }
+                finally
+                {
+                    _appLifetime.StopApplication();
+                }
             }
 
-            return Task.FromCanceled(cancellationToken);
+            return task;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
