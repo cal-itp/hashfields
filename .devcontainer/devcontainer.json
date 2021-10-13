@@ -16,10 +16,6 @@
     "eamodio.gitlens",
     "spmeesseman.vscode-taskexplorer"
   ],
-  "postStartCommand": [
-    "/bin/bash",
-    ".devcontainer/postStart.sh"
-  ],
   "postAttachCommand": [
     "/bin/bash",
     ".devcontainer/postAttach.sh"
