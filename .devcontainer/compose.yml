@@ -5,9 +5,11 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
-    image: hashfields:dev
-    entrypoint: []
     command: sleep infinity
+    entrypoint: []
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+    image: hashfields:dev
     working_dir: /hashfields
     volumes:
         - ..:/hashfields
@@ -16,5 +18,7 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile.deploy-alpine
-    image: hashfields:deploy-alpine
     command: ["./hashfields"]
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    image: hashfields:deploy-alpine
