@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HashFields.Data.Csv
 {
-    public class Csv : IColumnOperator, IStreamWriter
+    public class Csv
     {
         internal static readonly string DefaultDelimiter = ",";
 

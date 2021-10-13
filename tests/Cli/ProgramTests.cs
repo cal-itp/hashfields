@@ -20,15 +20,12 @@ namespace HashFields.Cli.Tests
         [DataTestMethod]
         [DataRow(typeof(IOptions<DataOptions>))]
         [DataRow(typeof(IOptions<StreamOptions>))]
+        [DataRow(typeof(OptionsInputStreamProvider))]
+        [DataRow(typeof(OptionsOutputStreamProvider))]
+        [DataRow(typeof(HashFieldsService))]
         [DataRow(typeof(IConsoleService))]
         [DataRow(typeof(IFileService))]
         [DataRow(typeof(IStreamProvider))]
-        [DataRow(typeof(OptionsInputStreamProvider))]
-        [DataRow(typeof(OptionsOutputStreamProvider))]
-        [DataRow(typeof(IColumnOperator))]
-        [DataRow(typeof(IStreamWriter))]
-        [DataRow(typeof(IStringHasher))]
-        [DataRow(typeof(HashFieldsService))]
         public void Registers_Service(Type serviceType)
         {
             var host = NewHost(emptyArgs);
@@ -39,9 +36,6 @@ namespace HashFields.Cli.Tests
         }
 
         [DataTestMethod]
-        [DataRow(typeof(IColumnOperator))]
-        [DataRow(typeof(IStreamWriter))]
-        [DataRow(typeof(IStringHasher))]
         [DataRow(typeof(OptionsInputStreamProvider))]
         [DataRow(typeof(OptionsOutputStreamProvider))]
         [DataRow(typeof(HashFieldsService))]

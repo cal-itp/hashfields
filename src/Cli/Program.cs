@@ -26,15 +26,19 @@ namespace HashFields.Cli
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<IColumnOperator, Csv>()
-                            .AddSingleton<IStreamWriter, Csv>()
-                            .AddSingleton<IStringHasher, StringHasher>()
-                            .AddSingleton<OptionsInputStreamProvider>()
+                    services.AddOptions<DataOptions>()
+                            .Bind(context.Configuration.GetSection(DataOptions.ConfigurationSectionName))
+                            .ValidateDataAnnotations();
+
+                    services.AddOptions<StreamOptions>()
+                            .Bind(context.Configuration.GetSection(StreamOptions.ConfigurationSectionName))
+                            .ValidateDataAnnotations();
+
+                    services.AddSingleton<OptionsInputStreamProvider>()
                             .AddSingleton<OptionsOutputStreamProvider>()
                             .AddSingleton<HashFieldsService>();
 
                     services.AddTransient<IFileService, FileService>()
-                            .AddTransient<IStreamProvider, OptionsOutputStreamProvider>()
                             .AddTransient<IStreamProvider, OptionsInputStreamProvider>();
 
                     if (context.HostingEnvironment.IsDevelopment())
@@ -45,14 +49,6 @@ namespace HashFields.Cli
                     {
                         services.AddTransient<IConsoleService, ConsoleService>();
                     }
-
-                    services.AddOptions<DataOptions>()
-                            .Bind(context.Configuration.GetSection(DataOptions.ConfigurationSectionName))
-                            .ValidateDataAnnotations();
-
-                    services.AddOptions<StreamOptions>()
-                            .Bind(context.Configuration.GetSection(StreamOptions.ConfigurationSectionName))
-                            .ValidateDataAnnotations();
 
                     services.AddHostedService<Worker>();
                 });
