@@ -17,7 +17,10 @@ services:
   deploy-alpine:
     build:
       context: ..
-      dockerfile: .devcontainer/Dockerfile.deploy-alpine
+      dockerfile: .devcontainer/Dockerfile.deploy
+      args:
+        - runtime=5.0-alpine
+        - target=linux-musl-x64
     command: ["./hashfields"]
     environment:
       - DOTNET_ENVIRONMENT=Production

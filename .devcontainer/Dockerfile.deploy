@@ -1,0 +1,21 @@
+ARG runtime 5.0
+ARG target linux-x64
+
+FROM hashfields:dev as builder
+
+ARG runtime
+ARG target
+
+WORKDIR /builder
+
+COPY HashFields.sln HashFields.sln
+COPY src/ src/
+COPY tests/ tests/
+
+RUN dotnet restore src/Cli/hashfields.csproj
+RUN dotnet publish -r $target -c Release -o ./out src/Cli/hashfields.csproj
+
+FROM mcr.microsoft.com/dotnet/runtime-deps:$runtime
+
+WORKDIR /hashfields
+COPY --from=builder /builder/out .
