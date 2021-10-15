@@ -8,7 +8,9 @@ Cross-platform command-line tool built using [.NET Core 5.0](https://dotnet.micr
 
 * Open in VS Code
 * Rebuild and Reopen in Container
+* Review the [`appsettings.json`](https://github.com/cal-itp/hashfields/blob/main/src/Cli/appsettings.json) and [sample data](https://github.com/cal-itp/hashfields/blob/main/src/Cli/samples/data.csv) files
 * Set a breakpoint in [`src/Cli/Program.cs`](src/Cli/Program.cs) and hit `F5` to run in debug mode
+* After the run completes, look in your local `src/Cli/sample` directory for the hashed output file
 
 ## Run the tests
 
