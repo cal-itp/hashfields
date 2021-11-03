@@ -37,16 +37,27 @@ jobs:
       - name: Publish
         run: dotnet publish -r ${{ matrix.runtime }} -c Release -o ./out src/Cli/hashfields.csproj
 
-      - name: Zip
+      - name: Make artifact path
+        id: make-path
+        env:
+          ref: ${{ github.ref }}
+          runtime: ${{ matrix.runtime }}
+          dotnet: ${{ matrix.dotnet }}
         run: |
-          zip -r -j hashfields-${{ matrix.runtime }}-${{ matrix.dotnet }}.zip out/
-          ls -l hashfields-${{ matrix.runtime }}-${{ matrix.dotnet }}.zip
+          echo "::set-output name=path::hashfields-${ref/refs\/tags\//}-$runtime-$dotnet.zip"
+
+      - name: Zip
+        env:
+          path: ${{ steps.make-path.outputs.path }}
+        run: |
+          zip -r -j $path out/
+          ls -l $path
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: package
-          path: hashfields-${{ matrix.runtime }}-${{ matrix.dotnet }}.zip
+          path: ${{ steps.make-path.outputs.path }}
 
   release:
     runs-on: ubuntu-latest
