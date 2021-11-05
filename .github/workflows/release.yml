@@ -44,7 +44,7 @@ jobs:
           runtime: ${{ matrix.runtime }}
           dotnet: ${{ matrix.dotnet }}
         run: |
-          echo "::set-output name=path::hashfields-${ref/refs\/tags\//}-$runtime-$dotnet.zip"
+          echo "::set-output name=path::hashfields-${ref/refs\/tags\//}-$runtime-dotnet-$dotnet.zip"
 
       - name: Zip
         env:
