@@ -3,8 +3,19 @@ name: Run tests
 on:
   push:
     branches: [ main ]
+    paths:
+      - .github/workflows/dotnet-test.yml
+      - 'src/**'
+      - 'tests/**'
+      - HashFields.sln
+
   pull_request:
     branches: [ "*" ]
+    paths:
+      - .github/workflows/dotnet-test.yml
+      - 'src/**'
+      - 'tests/**'
+      - HashFields.sln
 
 jobs:
   test:
