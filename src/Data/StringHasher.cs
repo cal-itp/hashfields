@@ -32,14 +32,23 @@ namespace HashFields.Data
             }
         }
 
-        public string Hash(string input)
+        public string Hash(string input, bool hyphens = true, bool lowercase = false)
         {
             var data = Encoding.UTF8.GetBytes(input);
 
             using var algo = GetAlgorithm();
-            var hashed = algo.ComputeHash(data);
+            var hashed = BitConverter.ToString(algo.ComputeHash(data));
 
-            return BitConverter.ToString(hashed);
+            if (!hyphens)
+            {
+                hashed = hashed.Replace("-", "");
+            }
+            if (lowercase)
+            {
+                hashed = hashed.ToLower();
+            }
+
+            return hashed;
         }
 
         private HashAlgorithm GetAlgorithm()

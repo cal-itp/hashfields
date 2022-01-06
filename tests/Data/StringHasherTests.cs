@@ -1,6 +1,4 @@
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HashFields.Data.Tests
@@ -55,6 +53,36 @@ namespace HashFields.Data.Tests
         {
             var hasher = new StringHasher(hashAlgorithm);
             var actual = hasher.Hash(inputText);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [DataTestMethod]
+        [DataRow("sha256", "Some input text", "13-26-5a-a4-b5-9f-21-67-46-00-1b-73-20-78-ed-8b-6c-cb-1d-04-70-d8-c3-da-71-0d-85-39-21-4b-80-d3")]
+        public void Hash_MakesLowercase(string hashAlgorithm, string inputText, string expected)
+        {
+            var hasher = new StringHasher(hashAlgorithm);
+            var actual = hasher.Hash(inputText, lowercase: true);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [DataTestMethod]
+        [DataRow("sha256", "Some input text", "13265AA4B59F216746001B732078ED8B6CCB1D0470D8C3DA710D8539214B80D3")]
+        public void Hash_RemovesHyphens(string hashAlgorithm, string inputText, string expected)
+        {
+            var hasher = new StringHasher(hashAlgorithm);
+            var actual = hasher.Hash(inputText, hyphens: false);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [DataTestMethod]
+        [DataRow("sha256", "Some input text", "13265aa4b59f216746001b732078ed8b6ccb1d0470d8c3da710d8539214b80d3")]
+        public void Hash_RemovesHyphensAndMakesLower(string hashAlgorithm, string inputText, string expected)
+        {
+            var hasher = new StringHasher(hashAlgorithm);
+            var actual = hasher.Hash(inputText, hyphens: false, lowercase: true);
 
             Assert.AreEqual(expected, actual);
         }
