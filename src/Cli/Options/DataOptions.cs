@@ -13,6 +13,10 @@ namespace HashFields.Cli.Options
 
         public string HashAlgorithm { get; set; } = StringHasher.SupportedAlgorithms.Last();
 
+        public bool HyphenateHashes { get; set; } = true;
+
+        public bool LowercaseHashes { get; set; } = false;
+
         public List<string> Drop { get; } = new List<string>();
 
         public List<string> Skip { get; } = new List<string>();
