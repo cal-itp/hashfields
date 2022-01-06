@@ -39,7 +39,7 @@ namespace HashFields.Data
             using var algo = GetAlgorithm();
             var hashed = algo.ComputeHash(data);
 
-            return Encoding.UTF8.GetString(hashed);
+            return BitConverter.ToString(hashed);
         }
 
         private HashAlgorithm GetAlgorithm()
