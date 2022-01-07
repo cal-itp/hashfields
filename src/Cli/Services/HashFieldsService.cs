@@ -51,7 +51,7 @@ namespace HashFields.Cli.Services
             var hashColumns = csv.Header.Except(_dataOptions.Skip).ToArray();
             // wrap the stringHasher.Hash function with params from _dataOptions
             // to create a hashFunc for the csv.Apply() call
-            Func<string, string> hashFunc = (input) =>
+            string hashFunc(string input) =>
                 stringHasher.Hash(
                     input,
                     hyphens: _dataOptions.HyphenateHashes,
