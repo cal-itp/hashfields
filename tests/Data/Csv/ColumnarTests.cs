@@ -32,14 +32,9 @@ namespace HashFields.Data.Csv.Tests
 
             columnar.Apply(val => val + "_mod", "2");
 
-            foreach (var elem in columnar["2"])
-            {
-                CollectionAssert.Contains(new[] { "4_mod", "6_mod" }, elem);
-            }
-            foreach (var elem in columnar["3"].Union(columnar["5"]))
-            {
-                CollectionAssert.Contains(new[] { "6", "9", "10", "15" }, elem);
-            }
+            CollectionAssert.AreEqual(new[] { "4_mod", "6_mod" }, columnar["2"]);
+            CollectionAssert.AreEqual(new[] { "6", "9" }, columnar["3"]);
+            CollectionAssert.AreEqual(new[] { "10", "15" }, columnar["5"]);
         }
 
         [TestMethod]
@@ -55,10 +50,10 @@ namespace HashFields.Data.Csv.Tests
 
             columnar.Apply(val => val + "_mod", "z");
 
-            foreach (var elem in columnar["2"].Union(columnar["3"].Union(columnar["5"])))
-            {
-                CollectionAssert.Contains(new[] { "4", "6", "9", "10", "15" }, elem);
-            }
+            CollectionAssert.AreEqual(new[] { "2", "3", "5" }, columnar.Header);
+            CollectionAssert.AreEqual(new[] { "4", "6" }, columnar["2"]);
+            CollectionAssert.AreEqual(new[] { "6", "9" }, columnar["3"]);
+            CollectionAssert.AreEqual(new[] { "10", "15" }, columnar["5"]);
         }
 
         [TestMethod]
