@@ -104,16 +104,7 @@ namespace HashFields.Data.Csv
             }
         }
 
-        public void Write(Stream destination)
-        {
-            using var sw = new StreamWriter(destination);
-            foreach (var row in Rows())
-            {
-                sw.WriteLine(String.Join(",", row));
-            }
-        }
-
-        private List<List<string>> Rows()
+        public List<List<string>> Rows()
         {
             var rows = Enumerable.Range(0, Columns.Max(c => c.Count))
                                  .Select(_ => new List<string>())
@@ -121,15 +112,24 @@ namespace HashFields.Data.Csv
 
             foreach (var column in Columns)
             {
-                foreach (var val in column)
+                for (int i = 0; i < column.Count; i++)
                 {
-                    rows[column.IndexOf(val)].Add(val);
+                    rows[i].Add(column[i]);
                 }
             }
 
             rows.Insert(0, Header);
 
             return rows;
+        }
+
+        public void Write(Stream destination)
+        {
+            using var sw = new StreamWriter(destination);
+            foreach (var row in Rows())
+            {
+                sw.WriteLine(String.Join(",", row));
+            }
         }
 
         private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream, string delimiter)

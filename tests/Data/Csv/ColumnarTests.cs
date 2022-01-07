@@ -256,5 +256,70 @@ namespace HashFields.Data.Csv.Tests
             Assert.IsTrue(columnar.Header.Contains("1"));
             Assert.IsTrue(columnar.Header.Contains("!"));
         }
+
+        [TestMethod]
+        public void Rows_MultiRow()
+        {
+            var columner = NewColumnar(_data);
+
+            var rows = columner.Rows();
+
+            Assert.AreEqual(3, rows.Count);
+            CollectionAssert.AreEqual(new[] { "1", "a", "!" }, rows[0]);
+            CollectionAssert.AreEqual(new[] { "2", "b", "@" }, rows[1]);
+            CollectionAssert.AreEqual(new[] { "3", "c", "#" }, rows[2]);
+        }
+
+        [TestMethod]
+        public void Rows_MultiRow_Duplicates()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+                1, a, !
+                2, a, @
+                3, c, #
+                4, d, #
+            ");
+
+            var columnar = NewColumnar(data);
+
+            var rows = columnar.Rows();
+
+            Assert.AreEqual(4, rows.Count);
+            CollectionAssert.AreEqual(new[] { "1", "a", "!" }, rows[0]);
+            CollectionAssert.AreEqual(new[] { "2", "a", "@" }, rows[1]);
+            CollectionAssert.AreEqual(new[] { "3", "c", "#" }, rows[2]);
+            CollectionAssert.AreEqual(new[] { "4", "d", "#" }, rows[3]);
+        }
+
+        [TestMethod]
+        public void Rows_SingleRow()
+        {
+            var data = Encoding.UTF8.GetBytes("1, a, !");
+
+            var columnar = NewColumnar(data);
+
+            var rows = columnar.Rows();
+
+            Assert.AreEqual(1, rows.Count);
+            CollectionAssert.AreEqual(new[] { "1", "a", "!" }, rows[0]);
+        }
+
+        [TestMethod]
+        public void Write_EndsWithNewline()
+        {
+            var text = String.Join(Environment.NewLine, new[] { "1, a, !", "2, b, @", "3, c, #" });
+
+            Assert.IsFalse(text.EndsWith(Environment.NewLine));
+
+            var data = Encoding.UTF8.GetBytes(text);
+            var columnar = NewColumnar(data);
+            var destination = new MemoryStream();
+
+            columnar.Write(destination);
+
+            var result = Encoding.UTF8.GetString(destination.ToArray());
+
+            StringAssert.EndsWith(result, Environment.NewLine);
+        }
     }
 }
