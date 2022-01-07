@@ -170,6 +170,42 @@ namespace HashFields.Data.Csv.Tests
         }
 
         [TestMethod]
+        public void New_MultiRow_BlankValues_Initializes_HeaderAndColumns()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+                1, a, !
+                2, b,
+                3,, #
+                4, d, $
+            ");
+
+            var columnar = NewColumnar(data);
+
+            var header = columnar.Header.ToArray();
+            CollectionAssert.AreEqual(new[] { "1", "a", "!" }, header);
+
+            Assert.AreEqual(3, columnar.Columns.Count);
+
+            foreach (var column in header)
+            {
+                Assert.AreEqual(3, columnar[column].Count);
+
+                if (column == "1")
+                {
+                    CollectionAssert.AreEqual(new[] { "2", "3", "4" }, columnar[column]);
+                }
+                else if (column == "a")
+                {
+                    CollectionAssert.AreEqual(new[] { "b", "", "d" }, columnar[column]);
+                }
+                else if (column == "!")
+                {
+                    CollectionAssert.AreEqual(new[] { "", "#", "$" }, columnar[column]);
+                }
+            }
+        }
+
+        [TestMethod]
         public void New_SingleRow_Initializes_HeaderAndColumns()
         {
             var data = Encoding.UTF8.GetBytes("1, 2, 3");
