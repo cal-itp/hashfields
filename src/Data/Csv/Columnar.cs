@@ -7,34 +7,67 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace HashFields.Data.Csv
 {
+    /// <summary>
+    /// Helper to work with delimited tabular data as columns rather than rows.
+    /// </summary>
+    /// <see cref="IEquatable{T}" />
     internal class Columnar : IEquatable<Columnar>
     {
-        private readonly List<string> _headers = new();
+        private readonly List<string> _header = new();
         private readonly Dictionary<string, List<string>> _data = new();
 
+        /// <summary>
+        /// The column of values by column name.
+        /// </summary>
+        /// <param name="key">The name of the column.</param>
+        /// <returns>A list representing the column's values.</returns>
         public List<string> this[string key] { get => _data[key]; }
-        public List<string> this[int index] { get => _data[_headers[index]]; }
-        public List<string> Header { get => _headers.ToList(); }
+
+        /// <summary>
+        /// The column of values by column index.
+        /// </summary>
+        /// <param name="index">The 0-based index of the column.</param>
+        /// <returns>A list representing the column's values.</returns>
+        public List<string> this[int index] { get => _data[_header[index]]; }
+
+        /// <summary>
+        /// The list of column names.
+        /// </summary>
+        public List<string> Header { get => _header.ToList(); }
+
+        /// <summary>
+        /// The list of data columns.
+        /// </summary>
         public List<List<string>> Columns { get => _data.Values.ToList(); }
 
-        public Columnar(string delimiter) : this(new MemoryStream(), delimiter)
-        {
-        }
-
+        /// <summary>
+        /// Initialize a new <c>Columnar</c> for delimited data.
+        /// </summary>
+        /// <param name="stream">The <c>Stream</c> of data to read into this <c>Columnar</c>.</param>
+        /// <param name="delimiter">The delimiter used between fields in the data.</param>
         public Columnar(Stream stream, string delimiter)
         {
             if (stream is not null)
             {
                 var tuple = Parse(stream, delimiter);
 
-                _headers = tuple.Item1;
+                _header = tuple.Item1;
                 _data = tuple.Item2;
             }
         }
 
+        /// <summary>
+        /// Call a function for each value in the specified columns.
+        /// </summary>
+        /// <param name="func">
+        ///     A function taking a string as input and returning a string.
+        ///     Each value in the column is passed through this function and
+        ///     overwritten in-place.
+        /// </param>
+        /// <param name="columns">The list of columns to apply the function on.</param>
         public void Apply(Func<string, string> func, params string[] columns)
         {
-            foreach (var column in _headers.Intersect(columns).ToArray())
+            foreach (var column in _header.Intersect(columns).ToArray())
             {
                 _data[column] = _data[column].ConvertAll(s => func(s));
             }
@@ -47,7 +80,7 @@ namespace HashFields.Data.Csv
                 return false;
             }
 
-            if (!_headers.SequenceEqual(other._headers))
+            if (!_header.SequenceEqual(other._header))
             {
                 return false;
             }
@@ -81,7 +114,7 @@ namespace HashFields.Data.Csv
         public override int GetHashCode()
         {
             var hashcode = new HashCode();
-            foreach (var header in _headers)
+            foreach (var header in _header)
             {
                 hashcode.Add(header);
             }
@@ -95,34 +128,57 @@ namespace HashFields.Data.Csv
             return hashcode.ToHashCode();
         }
 
+        /// <summary>
+        /// Remove the named columns from this <c>Columnar</c> data.
+        /// The column names should match those found in the <c>Header</c>.
+        /// </summary>
+        /// <seealso cref="Header" />
+        /// <param name="columns">The list of column names to remove.</param>
         public void Remove(params string[] columns)
         {
-            foreach (var column in _headers.Intersect(columns).ToArray())
+            // find intersection of the real header names and those for removal
+            // create a new array from this intersection so we don't loop over
+            // the collection we are modifying!
+            foreach (var column in _header.Intersect(columns).ToArray())
             {
-                _headers.Remove(column);
+                _header.Remove(column);
                 _data.Remove(column);
             }
         }
 
+        /// <summary>
+        /// Compute the list of data rows from the current state of this <c>Columnar</c>.
+        /// </summary>
         public List<List<string>> Rows()
         {
+            // find the column with the longest length (N) - the number of rows
+            // create a list of N lists to represent the rows
             var rows = Enumerable.Range(0, Columns.Max(c => c.Count))
                                  .Select(_ => new List<string>())
                                  .ToList();
 
             foreach (var column in Columns)
             {
+                // copy values for this column into each row
                 for (int i = 0; i < column.Count; i++)
                 {
+                    // rows[i] is a list representing the ith row
+                    // append the column value to the end of the row list
+                    // the "next" position in the row
                     rows[i].Add(column[i]);
                 }
             }
 
+            // insert the header row first
             rows.Insert(0, Header);
 
             return rows;
         }
 
+        /// <summary>
+        /// Write this <c>Columnar</c> data to a stream as delimited tabular data.
+        /// </summary>
+        /// <param name="destination">A writable <c>Steam</c> target for this <c>Columnar</c>.</param>
         public void Write(Stream destination)
         {
             using var sw = new StreamWriter(destination);
@@ -132,6 +188,26 @@ namespace HashFields.Data.Csv
             }
         }
 
+        /// <summary>
+        /// Read delimited data from a stream and convert into columnar format.
+        /// </summary>
+        /// <param name="stream">The source of data.</param>
+        /// <param name="delimiter">The delimiter used to separate fields in the data.</param>
+        /// <returns>A <c>Tuple</c> containing two items:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <term><c>List{String}</c></term>
+        ///             <description>The ordered header row of column names.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term><c>Dictionary{String,List{String}}</c></term>
+        ///             <description>
+        ///                 The data columns, where the key is the column name
+        ///                 and the value is the list of values in the column.
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </returns>
         private static Tuple<List<string>, Dictionary<string, List<string>>> Parse(Stream stream, string delimiter)
         {
             var header = new List<string>();
