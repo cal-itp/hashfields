@@ -280,9 +280,9 @@ namespace HashFields.Data.Csv.Tests
         [TestMethod]
         public void Rows_MultiRow()
         {
-            var columner = NewColumnar(_data);
+            var columnar = NewColumnar(_data);
 
-            var rows = columner.Rows();
+            var rows = columnar.Rows();
 
             Assert.AreEqual(3, rows.Count);
             CollectionAssert.AreEqual(new[] { "1", "a", "!" }, rows[0]);
