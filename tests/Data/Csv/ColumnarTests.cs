@@ -127,23 +127,9 @@ namespace HashFields.Data.Csv.Tests
 
             Assert.AreEqual(3, columnar.Columns.Count);
 
-            foreach (var column in header)
-            {
-                Assert.AreEqual(2, columnar[column].Count);
-
-                if (column == "1")
-                {
-                    CollectionAssert.AreEqual(new[] { "2", "3" }, columnar[column]);
-                }
-                else if (column == "a")
-                {
-                    CollectionAssert.AreEqual(new[] { "b", "c" }, columnar[column]);
-                }
-                else if (column == "!")
-                {
-                    CollectionAssert.AreEqual(new[] { "@", "#" }, columnar[column]);
-                }
-            }
+            CollectionAssert.AreEqual(new[] { "2", "3" }, columnar["1"]);
+            CollectionAssert.AreEqual(new[] { "b", "c" }, columnar["a"]);
+            CollectionAssert.AreEqual(new[] { "@", "#" }, columnar["!"]);
         }
 
         [TestMethod]
@@ -158,10 +144,9 @@ namespace HashFields.Data.Csv.Tests
             const string delimiter = "<>";
             var columnar = NewColumnar(data, delimiter);
 
-            foreach (var elem in columnar["2"].Union(columnar["3"].Union(columnar["5"])))
-            {
-                CollectionAssert.Contains(new[] { "4", "6", "9", "10", "15" }, elem);
-            }
+            CollectionAssert.AreEqual(new[] { "4", "6" }, columnar["2"]);
+            CollectionAssert.AreEqual(new[] { "6", "9" }, columnar["3"]);
+            CollectionAssert.AreEqual(new[] { "10", "15" }, columnar["5"]);
         }
 
         [TestMethod]
@@ -181,23 +166,9 @@ namespace HashFields.Data.Csv.Tests
 
             Assert.AreEqual(3, columnar.Columns.Count);
 
-            foreach (var column in header)
-            {
-                Assert.AreEqual(3, columnar[column].Count);
-
-                if (column == "1")
-                {
-                    CollectionAssert.AreEqual(new[] { "2", "3", "4" }, columnar[column]);
-                }
-                else if (column == "a")
-                {
-                    CollectionAssert.AreEqual(new[] { "b", "", "d" }, columnar[column]);
-                }
-                else if (column == "!")
-                {
-                    CollectionAssert.AreEqual(new[] { "", "#", "$" }, columnar[column]);
-                }
-            }
+            CollectionAssert.AreEqual(new[] { "2", "3", "4" }, columnar["1"]);
+            CollectionAssert.AreEqual(new[] { "b", "", "d" }, columnar["a"]);
+            CollectionAssert.AreEqual(new[] { "", "#", "$" }, columnar["!"]);
         }
 
         [TestMethod]
@@ -221,10 +192,10 @@ namespace HashFields.Data.Csv.Tests
         public void New_TrimsFieldValues()
         {
             var data = Encoding.UTF8.GetBytes(@"
-            1,      a,           !
-            2,      b,           @
-            3,      c,           #
-            4,      d,           $
+            1      ,      a    ,           !
+            2      ,      b    ,           @
+            3      ,      c    ,           #
+            4      ,      d    ,           $
             ");
 
             var columnar = NewColumnar(data);
@@ -339,7 +310,7 @@ namespace HashFields.Data.Csv.Tests
 
             var result = Encoding.UTF8.GetString(destination.ToArray());
 
-            StringAssert.EndsWith(result, Environment.NewLine);
+            Assert.IsTrue(result.EndsWith(Environment.NewLine));
         }
 
         [TestMethod]
