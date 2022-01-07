@@ -217,6 +217,31 @@ namespace HashFields.Data.Csv.Tests
             }
         }
 
+        [TestMethod]
+        public void New_TrimsFieldValues()
+        {
+            var data = Encoding.UTF8.GetBytes(@"
+            1,      a,           !
+            2,      b,           @
+            3,      c,           #
+            4,      d,           $
+            ");
+
+            var columnar = NewColumnar(data);
+
+            var header = columnar.Header.ToArray();
+            CollectionAssert.AreEqual(new[] { "1", "a", "!" }, header);
+
+            foreach (var column in columnar.Columns)
+            {
+                foreach (var value in column)
+                {
+                    Assert.IsFalse(value.StartsWith(" "));
+                    Assert.IsFalse(value.EndsWith(" "));
+                }
+            }
+        }
+
         [DataTestMethod]
         [DataRow(new[] { "1", "a" })]
         [DataRow(new[] { "1", "!" })]
