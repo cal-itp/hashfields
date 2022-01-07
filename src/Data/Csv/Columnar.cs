@@ -15,6 +15,7 @@ namespace HashFields.Data.Csv
     {
         private readonly List<string> _header = new();
         private readonly Dictionary<string, List<string>> _data = new();
+        private readonly string _delimiter;
 
         /// <summary>
         /// The column of values by column name.
@@ -49,7 +50,9 @@ namespace HashFields.Data.Csv
         {
             if (stream is not null)
             {
-                var tuple = Parse(stream, delimiter);
+                _delimiter = delimiter;
+
+                var tuple = Parse(stream, _delimiter);
 
                 _header = tuple.Item1;
                 _data = tuple.Item2;
@@ -129,7 +132,7 @@ namespace HashFields.Data.Csv
             using var sw = new StreamWriter(destination);
             foreach (var row in Rows())
             {
-                sw.WriteLine(String.Join(",", row));
+                sw.WriteLine(String.Join(_delimiter, row));
             }
         }
 

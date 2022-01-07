@@ -341,5 +341,20 @@ namespace HashFields.Data.Csv.Tests
 
             StringAssert.EndsWith(result, Environment.NewLine);
         }
+
+        [TestMethod]
+        public void Write_UsesDelimiter()
+        {
+            const string text = "1|a|!\n2|b|@\n3|c|#\n";
+            var data = Encoding.UTF8.GetBytes(text);
+            var columnar = NewColumnar(data, delimiter: "|");
+            var destination = new MemoryStream();
+
+            columnar.Write(destination);
+
+            var result = Encoding.UTF8.GetString(destination.ToArray());
+
+            Assert.AreEqual(text, result);
+        }
     }
 }
