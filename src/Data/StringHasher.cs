@@ -51,7 +51,7 @@ namespace HashFields.Data
         /// <param name="input">The input string to hash.</param>
         /// <param name="hyphens">Whether to produce the output hash with hyphens separating each byte. The default is <c>true</c>.</param>
         /// <param name="lowercase">Whether to produce the output hash using lowercase hexadecimal digits. The default is <c>false</c>.</param>
-        /// <returns>A string contained the hashed input string.</returns>
+        /// <returns>A string containing the hashed input string.</returns>
         public string Hash(string input, bool hyphens = true, bool lowercase = false)
         {
             var data = Encoding.UTF8.GetBytes(input);
