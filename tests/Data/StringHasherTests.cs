@@ -79,7 +79,7 @@ namespace HashFields.Data.Tests
 
         [DataTestMethod]
         [DataRow("sha256", "Some input text", "13265aa4b59f216746001b732078ed8b6ccb1d0470d8c3da710d8539214b80d3")]
-        public void Hash_RemovesHyphensAndMakesLower(string hashAlgorithm, string inputText, string expected)
+        public void Hash_RemovesHyphensAndMakesLowercase(string hashAlgorithm, string inputText, string expected)
         {
             var hasher = new StringHasher(hashAlgorithm);
             var actual = hasher.Hash(inputText, hyphens: false, lowercase: true);
