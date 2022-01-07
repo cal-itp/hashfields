@@ -73,61 +73,6 @@ namespace HashFields.Data.Csv
             }
         }
 
-        public bool Equals(Columnar other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (!_header.SequenceEqual(other._header))
-            {
-                return false;
-            }
-
-            foreach (var column in _data)
-            {
-                if (!column.Value.SequenceEqual(other._data[column.Key]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            if (obj is not Columnar columnar)
-            {
-                return false;
-            }
-
-            return Equals(columnar);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashcode = new HashCode();
-            foreach (var header in _header)
-            {
-                hashcode.Add(header);
-            }
-            foreach (var column in _data.Values)
-            {
-                foreach (var val in column)
-                {
-                    hashcode.Add(val);
-                }
-            }
-            return hashcode.ToHashCode();
-        }
-
         /// <summary>
         /// Remove the named columns from this <c>Columnar</c> data.
         /// The column names should match those found in the <c>Header</c>.
@@ -246,5 +191,64 @@ namespace HashFields.Data.Csv
                 )
             );
         }
+
+        #region IEquatable<Columnar>
+
+        public bool Equals(Columnar other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (!_header.SequenceEqual(other._header))
+            {
+                return false;
+            }
+
+            foreach (var column in _data)
+            {
+                if (!column.Value.SequenceEqual(other._data[column.Key]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (obj is not Columnar columnar)
+            {
+                return false;
+            }
+
+            return Equals(columnar);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashcode = new HashCode();
+            foreach (var header in _header)
+            {
+                hashcode.Add(header);
+            }
+            foreach (var column in _data.Values)
+            {
+                foreach (var val in column)
+                {
+                    hashcode.Add(val);
+                }
+            }
+            return hashcode.ToHashCode();
+        }
+
+        #endregion
     }
 }
