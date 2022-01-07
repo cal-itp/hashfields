@@ -49,8 +49,16 @@ namespace HashFields.Cli.Services
             csv.Remove(dropColumns);
 
             var hashColumns = csv.Header.Except(_dataOptions.Skip).ToArray();
+            // wrap the stringHasher.Hash function with params from _dataOptions
+            // to create a hashFunc for the csv.Apply() call
+            string hashFunc(string input) =>
+                stringHasher.Hash(
+                    input,
+                    hyphens: _dataOptions.HyphenateHashes,
+                    lowercase: _dataOptions.LowercaseHashes
+                );
             _logger.LogInformation("Hashing columns: {{{}}}", String.Join(", ", hashColumns));
-            csv.Apply(stringHasher.Hash, hashColumns);
+            csv.Apply(hashFunc, hashColumns);
 
             _logger.LogInformation("Writing results");
             using var destination = _optionsStreamService.Get();

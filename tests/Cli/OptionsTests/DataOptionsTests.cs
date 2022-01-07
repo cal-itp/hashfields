@@ -21,6 +21,8 @@ namespace HashFields.Cli.Options.Tests
                 ["DataOptions:Drop:0"] = "a",
                 ["DataOptions:Drop:1"] = "b",
                 ["DataOptions:HashAlgorithm"] = "algo",
+                ["DataOptions:HyphenateHashes"] = "false",
+                ["DataOptions:LowercaseHashes"] = "true",
                 ["DataOptions:Skip:0"] = "1",
                 ["DataOptions:Skip:1"] = "2",
                 ["DataOptions:Skip:2"] = "3"
@@ -75,6 +77,44 @@ namespace HashFields.Cli.Options.Tests
             var dataOptions = config.GetSection("DataOptions").Get<DataOptions>();
 
             Assert.IsNotNull(dataOptions.HashAlgorithm);
+        }
+
+        [TestMethod]
+        public void HyphenateHashes()
+        {
+            Assert.AreEqual(false, _options.HyphenateHashes);
+        }
+
+        [TestMethod]
+        public void Deafult_HyphenateHashes()
+        {
+            var config = new ConfigurationBuilder()
+                // don't provide a HyphenateHashes key-value
+                .AddInMemoryCollection(new[] { KeyValuePair.Create("DataOptions:Delimiter", "delim") })
+                .Build();
+
+            var dataOptions = config.GetSection("DataOptions").Get<DataOptions>();
+
+            Assert.IsTrue(dataOptions.HyphenateHashes);
+        }
+
+        [TestMethod]
+        public void LowercaseHashes()
+        {
+            Assert.AreEqual(true, _options.LowercaseHashes);
+        }
+
+        [TestMethod]
+        public void Deafult_LowercaseHashes()
+        {
+            var config = new ConfigurationBuilder()
+                // don't provide a LowercaseHashes key-value
+                .AddInMemoryCollection(new[] { KeyValuePair.Create("DataOptions:Delimiter", "delim") })
+                .Build();
+
+            var dataOptions = config.GetSection("DataOptions").Get<DataOptions>();
+
+            Assert.IsFalse(dataOptions.LowercaseHashes);
         }
 
         [TestMethod]
