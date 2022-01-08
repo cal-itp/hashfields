@@ -81,14 +81,14 @@ A description of each of the settings (by section) follows:
 | Setting | Default | Description                                                           |
 | --------| ------- | --------------------------------------------------------------------- |
 | `Type`  | `StdIn` | The type of source to read data from. One of `File` or `StdIn`.       |
-| `Path`  |         | Required for `Type: File`; the path to a readble delimited data file. |
+| `Path`  |         | Required for `Type: File`; the path to a readable delimited data file. |
 
 #### `StreamOptions.Output`
 
 | Setting | Default  | Description                                                           |
 | --------| -------- | --------------------------------------------------------------------- |
 | `Type`  | `StdOut` | The type of target to write data to. One of `File` or `StdOut`.       |
-| `Path`  |          | Required for `Type: File`; the path to a writable file.               |
+| `Path`  |          | Required for `Type: File`; the path to a writeable file.              |
 
 ### Run the executable
 
