@@ -141,6 +141,19 @@ docker compose up --build deploy-alpine
 
 The `Cli` program's output is displayed in the terminal before the container shuts down.
 
+## Make a release
+
+Releases happen automatically with GitHub Actions. Push a calver version tag of
+the form `YYYY.0M.N` where:
+
+* `YYYY` is the 4 digit year
+* `0M` is the 0-prefixed month, e.g. 01 for January, 10 for October
+* `N` is the 1-based release number for the given month, incremented with
+  each release that year and month
+
+See [`.github/workflows/release.yml`][release.yml] for more details.
+
 [appsettings.json]: src/Cli/appsettings.json
 [data.csv]: src/Cli/samples/data.csv
 [program.cs]: src/Cli/Program.cs
+[release.yml]: .github/workflows/release.yml
