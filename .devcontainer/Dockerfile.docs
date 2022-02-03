@@ -1,0 +1,4 @@
+FROM squidfunk/mkdocs-material:8.1.9
+
+COPY docs/requirements.txt docs/requirements.txt
+RUN pip install -r docs/requirements.txt
