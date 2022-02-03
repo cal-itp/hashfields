@@ -31,7 +31,9 @@ extra:
 plugins:
   - search
   - awesome-pages
-  - redirects
+  - redirects:
+      redirect_maps:
+        "README.md": "intro/README.md"
 
 extra_javascript:
   - https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js
