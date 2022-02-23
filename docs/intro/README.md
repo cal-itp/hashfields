@@ -29,7 +29,7 @@ as a table:
 
 ### Configuration
 
-This `hashfields` configuration options:
+These `hashfields` configuration options:
 
 * **Hash algorithm:** `SHA256`
 * **Drop:** `column1`, `column3`
