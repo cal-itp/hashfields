@@ -129,11 +129,6 @@ Individual projects can be built using the `dotnet` command line tool:
 dotnet build /path/to/ProjectName.csproj
 ```
 
-The two main projects in `hashfields` are documented on their own pages:
-
-* [`Cli`](./cli.md)
-* [`Data`](./data.md)
-
 ### Solution
 
 The *Solution* or *Solution file*, with an `.sln` extension, is the top-level organizational structure in .NET. A solution is
