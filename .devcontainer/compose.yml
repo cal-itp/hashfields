@@ -25,3 +25,13 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Production
     image: hashfields:deploy-alpine
+
+  docs:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.docs
+    image: hashfields:docs
+    ports:
+      - "8000"
+    volumes:
+      - ..:/docs

@@ -17,7 +17,7 @@ namespace HashFields.Data
             "SHA512"
         };
 
-        private readonly string _algorithm;
+        private readonly string _algorithmName;
 
         /// <summary>
         /// Initialize a new StringHasher using the default hashing algorithm.
@@ -35,7 +35,7 @@ namespace HashFields.Data
         {
             if (SupportedAlgorithms.Contains(hashAlgorithm, StringComparer.OrdinalIgnoreCase))
             {
-                _algorithm = hashAlgorithm;
+                _algorithmName = hashAlgorithm;
             }
             else
             {
@@ -73,7 +73,7 @@ namespace HashFields.Data
 
         private HashAlgorithm GetAlgorithm()
         {
-            return HashAlgorithm.Create(_algorithm);
+            return HashAlgorithm.Create(_algorithmName);
         }
     }
 }
