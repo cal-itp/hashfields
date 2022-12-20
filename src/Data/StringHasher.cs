@@ -18,7 +18,6 @@ namespace HashFields.Data
         };
 
         private readonly string _algorithmName;
-        private HashAlgorithm _algorithm;
 
         /// <summary>
         /// Initialize a new StringHasher using the default hashing algorithm.
@@ -74,7 +73,7 @@ namespace HashFields.Data
 
         private HashAlgorithm GetAlgorithm()
         {
-            return _algorithm ??= HashAlgorithm.Create(_algorithmName);
+            return HashAlgorithm.Create(_algorithmName);
         }
     }
 }
