@@ -4,7 +4,7 @@
 * Rebuild and Reopen in Container
 * Review the [`appsettings.json`][appsettings.json] and [sample data][data.csv] files
 * Set a breakpoint in [`src/Cli/Program.cs`][program.cs] and hit `F5` to run in debug mode
-* After the run completes, look in your local `src/Cli/sample` directory for the hashed output file
+* After the run completes, look in your local `src/Cli/samples` directory for the hashed output file
 
 ## Run the tests
 
