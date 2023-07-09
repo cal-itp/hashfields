@@ -12,7 +12,7 @@ RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
     apt-get update && \
-    apt-get install -y dotnet-sdk-5.0 dotnet-sdk-6.0
+    apt-get install -y dotnet-sdk-6.0
 
 RUN python -m pip install --upgrade pip && \
     pip install --no-cache-dir pre-commit
