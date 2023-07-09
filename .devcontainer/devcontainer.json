@@ -1,25 +1,22 @@
 {
   "name": "hashfields",
-  "dockerComposeFile": [
-    "compose.yml"
-  ],
+  "dockerComposeFile": ["../compose.yml"],
   "service": "dev",
-  "runServices": [
-    "dev",
-    "docs"
-  ],
+  "runServices": ["dev", "docs"],
   "workspaceFolder": "/hashfields",
-  "extensions": [
-    "ms-dotnettools.csharp",
-    "josefpihrt-vscode.roslynator",
-    "formulahendry.dotnet-test-explorer",
-    "fernandoescolar.vscode-solution-explorer",
-    "eamodio.gitlens",
-    "spmeesseman.vscode-taskexplorer"
-  ],
-  "postAttachCommand": [
-    "/bin/bash",
-    ".devcontainer/postAttach.sh"
-  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "josefpihrt-vscode.roslynator",
+        "formulahendry.dotnet-test-explorer",
+        "fernandoescolar.vscode-solution-explorer",
+        "eamodio.gitlens",
+        "spmeesseman.vscode-taskexplorer",
+        "mechatroner.rainbow-csv"
+      ]
+    }
+  },
+  "postAttachCommand": ["/bin/bash", ".devcontainer/postAttach.sh"],
   "shutdownAction": "stopCompose"
 }

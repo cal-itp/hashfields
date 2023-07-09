@@ -29,7 +29,6 @@ The `Cli` app is deployed as a standalone, self-contained executable.
 Test this (deploying to an otherwise-empty Alpine Linux target):
 
 ```bash
-cd .devcontainer
 docker compose up --build deploy-alpine
 ```
 
