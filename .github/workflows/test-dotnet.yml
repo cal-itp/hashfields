@@ -1,15 +1,13 @@
-name: Run tests
+name: dotnet test
 
-on:
-  pull_request:
-    branches: ["*"]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
