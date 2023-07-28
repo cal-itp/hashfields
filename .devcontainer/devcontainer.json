@@ -1,9 +1,9 @@
 {
-  "name": "hashfields",
+  "name": "cal-itp/hashfields",
   "dockerComposeFile": ["../compose.yml"],
   "service": "dev",
   "runServices": ["dev", "docs"],
-  "workspaceFolder": "/hashfields",
+  "workspaceFolder": "/home/calitp/hashfields",
   "customizations": {
     "vscode": {
       "extensions": [

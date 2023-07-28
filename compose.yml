@@ -10,9 +10,8 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Development
     image: hashfields:dev
-    working_dir: /hashfields
     volumes:
-      - .:/hashfields
+      - .:/home/calitp/hashfields
 
   deploy-alpine:
     build:
