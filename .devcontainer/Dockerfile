@@ -25,5 +25,6 @@ USER $USER
 # update PATH for local pip installs
 ENV PATH "$PATH:/home/$USER/.local/bin"
 
+COPY .devcontainer/requirements.txt .devcontainer/requirements.txt
 RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir pre-commit
+    pip install -r .devcontainer/requirements.txt

@@ -7,7 +7,10 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "esbenp.prettier-vscode",
         "ms-dotnettools.csharp",
+        "ms-python.python",
+        "ms-python.black-formatter",
         "josefpihrt-vscode.roslynator",
         "formulahendry.dotnet-test-explorer",
         "fernandoescolar.vscode-solution-explorer",
