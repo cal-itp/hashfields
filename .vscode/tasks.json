@@ -46,7 +46,7 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "test",
+      "label": "test-dotnet",
       "command": "dotnet",
       "type": "process",
       "args": [
@@ -63,14 +63,14 @@
       "isTestCommand": true
     },
     {
-      "label": "watch-test-cli",
+      "label": "watch-test-dotnet-cli",
       "command": "dotnet",
       "type": "process",
       "args": [
         "watch",
         "test",
         "--project",
-        "${workspaceFolder}/tests/Cli/Cli.Tests.csproj",
+        "${workspaceFolder}/tests/dotnet/Cli/Cli.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -78,14 +78,14 @@
       "group": "test",
     },
     {
-      "label": "watch-test-data",
+      "label": "watch-test-dotnet-data",
       "command": "dotnet",
       "type": "process",
       "args": [
         "watch",
         "test",
         "--project",
-        "${workspaceFolder}/tests/Data/Data.Tests.csproj",
+        "${workspaceFolder}/tests/dotnet/Data/Data.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -93,7 +93,7 @@
       "group": "test",
     },
     {
-      "label": "watch-test",
+      "label": "watch-test-dotnet",
       "dependsOn": [
         "watch-test-cli",
         "watch-test-data",
