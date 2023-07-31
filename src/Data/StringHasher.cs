@@ -57,7 +57,8 @@ namespace HashFields.Data
             var data = Encoding.UTF8.GetBytes(input);
 
             using var algo = GetAlgorithm();
-            var hashed = BitConverter.ToString(algo.ComputeHash(data));
+            var computed = algo.ComputeHash(data);
+            var hashed = BitConverter.ToString(computed);
 
             if (!hyphens)
             {
@@ -73,7 +74,22 @@ namespace HashFields.Data
 
         private HashAlgorithm GetAlgorithm()
         {
-            return HashAlgorithm.Create(_algorithmName);
+            if (_algorithmName.Equals("sha256", StringComparison.OrdinalIgnoreCase))
+            {
+                return SHA256.Create();
+            }
+            else if (_algorithmName.Equals("sha384", StringComparison.OrdinalIgnoreCase))
+            {
+                return SHA384.Create();
+            }
+            else if (_algorithmName.Equals("sha512", StringComparison.OrdinalIgnoreCase))
+            {
+                return SHA512.Create();
+            }
+            else
+            {
+                throw new ArgumentException("hashAlgorithm is unsupported");
+            }
         }
     }
 }

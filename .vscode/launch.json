@@ -10,7 +10,7 @@
       "request": "launch",
       "preLaunchTask": "build-cli",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/src/Cli/bin/Debug/net5.0/Cli.dll",
+      "program": "${workspaceFolder}/src/Cli/bin/Debug/net6.0/Cli.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/Cli",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

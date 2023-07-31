@@ -1,4 +1,4 @@
-ARG runtime 5.0
+ARG runtime 6.0
 ARG target linux-x64
 
 FROM hashfields:dev as builder

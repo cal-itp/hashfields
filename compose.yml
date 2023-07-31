@@ -3,23 +3,22 @@ version: "3.8"
 services:
   dev:
     build:
-      context: ..
+      context: .
       dockerfile: .devcontainer/Dockerfile
     command: sleep infinity
     entrypoint: []
     environment:
       - DOTNET_ENVIRONMENT=Development
     image: hashfields:dev
-    working_dir: /hashfields
     volumes:
-        - ..:/hashfields
+      - .:/home/calitp/hashfields
 
   deploy-alpine:
     build:
-      context: ..
+      context: .
       dockerfile: .devcontainer/Dockerfile.deploy
       args:
-        - runtime=5.0-alpine
+        - runtime=6.0-alpine
         - target=linux-musl-x64
     command: ["./hashfields"]
     environment:
@@ -28,10 +27,10 @@ services:
 
   docs:
     build:
-      context: ..
+      context: .
       dockerfile: .devcontainer/Dockerfile.docs
     image: hashfields:docs
     ports:
       - "8000"
     volumes:
-      - ..:/docs
+      - .:/docs
