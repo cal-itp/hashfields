@@ -58,7 +58,7 @@ jobs:
           ls -l $path
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: package
           path: ${{ steps.make-path.outputs.path }}
