@@ -59,6 +59,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     data = csv.read(args.input, args.delimiter)
-    print(data.info())
+
+    hashed_data = hashing.hash_data(data, hash_alg=args.hash_alg, skip=args.skip, drop=args.drop)
+    print(hashed_data.info())
 
     return RESULT_SUCCESS
