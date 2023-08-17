@@ -1,0 +1,15 @@
+FROM python:3.11 as builder
+
+WORKDIR /builder
+
+COPY . .
+RUN pip install -e .[dist]
+RUN ./bin/package.sh
+
+FROM python:3.11
+
+WORKDIR /hashfields
+COPY --from=builder /builder/dist/* .
+RUN chmod +x ./hashfields
+
+ENTRYPOINT ["./hashfields"]

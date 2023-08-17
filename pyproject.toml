@@ -27,6 +27,9 @@ test = [
     "pytest",
     "pytest-mock"
 ]
+dist =[
+    "pyinstaller"
+]
 
 [project.scripts]
 hashfields = "hashfields.main:main"

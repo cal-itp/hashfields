@@ -12,17 +12,11 @@ services:
     volumes:
       - .:/home/calitp/hashfields
 
-  deploy-alpine:
+  dist:
     build:
       context: .
-      dockerfile: .devcontainer/Dockerfile.deploy
-      args:
-        - runtime=6.0-alpine
-        - target=linux-musl-x64
-    command: ["./hashfields"]
-    environment:
-      - DOTNET_ENVIRONMENT=Production
-    image: hashfields:deploy-alpine
+      dockerfile: .devcontainer/Dockerfile.dist
+    image: hashfields:dist
 
   docs:
     build:
