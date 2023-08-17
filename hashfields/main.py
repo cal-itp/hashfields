@@ -52,6 +52,13 @@ def main(argv=None):
         type=str,
     )
 
+    parser.add_argument(
+        "--dedupe",
+        action="store_true",
+        dest="dedupe",
+        help="With this flag, remove duplicate records from the output.",
+    )
+
     parser.add_argument("-i", "--input", default=sys.stdin, dest="input", help="Readable location for input data.")
 
     parser.add_argument("-o", "--output", default=sys.stdout, dest="output", help="Writable location for output results.")
@@ -61,6 +68,9 @@ def main(argv=None):
     data = csv.read(args.input, args.delimiter)
 
     hashed_data = hashing.hash_data(data, hash_alg=args.hash_alg, skip=args.skip, drop=args.drop)
+
+    if args.dedupe:
+        hashed_data.drop_duplicates(inplace=True, ignore_index=True)
 
     csv.write(hashed_data, args.output)
 

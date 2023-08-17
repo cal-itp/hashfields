@@ -81,3 +81,20 @@ def test_hashfields_skip_drop(capfd, hashfields):
     capture = capfd.readouterr()
 
     assert capture.out == expected
+
+
+@pytest.mark.parametrize(
+    ("source_file", "expected_file"),
+    [
+        ("./tests/samples/large.dupes.csv", "./tests/samples/large.hashed.csv"),
+        ("./tests/samples/small.dupes.csv", "./tests/samples/small.hashed.csv"),
+    ],
+)
+def test_hashfields_dedupe(capfd, hashfields, source_file, expected_file):
+    with open(expected_file, "r") as f:
+        expected = f.read()
+
+    subprocess.run([hashfields, "--input", source_file, "--dedupe"])
+    capture = capfd.readouterr()
+
+    assert capture.out == expected

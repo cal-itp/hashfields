@@ -77,6 +77,16 @@ def test_main_drop(mock_hashing_hash_data, arg_variant):
     assert mock_hashing_hash_data.call_args.kwargs["drop"] == drop
 
 
+@pytest.mark.usefixtures("mock_csv_read", "mock_csv_write")
+def test_main_dedupe(mocker, mock_hashing_hash_data):
+    mock_hashed_data = mocker.Mock()
+    mock_hashing_hash_data.return_value = mock_hashed_data
+    main(["--dedupe"])
+
+    mock_hashing_hash_data.assert_called_once()
+    mock_hashed_data.drop_duplicates.assert_called_once()
+
+
 @pytest.mark.usefixtures("mock_hashing_hash_data", "mock_csv_write")
 @pytest.mark.parametrize("arg_variant", ["-i", "--input"])
 def test_main_input(mock_csv_read, arg_variant):
