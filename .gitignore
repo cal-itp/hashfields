@@ -1,9 +1,5 @@
-bin/
-build/
-obj/
-
+__pycache__
 *.csv
-!src/Cli/samples/data.csv
-
-appsettings.*.json
-*_crash.*.json
+*.egg-info
+.coverage
+coverage

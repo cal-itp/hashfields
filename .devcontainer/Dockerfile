@@ -1,16 +1,5 @@
 FROM python:3.11
 
-# See: https://docs.microsoft.com/en-us/dotnet/core/install/linux
-
-RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    rm packages-microsoft-prod.deb
-
-RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
-    apt-get update && \
-    apt-get install -y dotnet-sdk-6.0
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     USER=calitp
@@ -18,12 +7,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN useradd --create-home --shell /bin/bash $USER && \
     chown -R $USER /home/$USER
 
+USER $USER
+ENV PATH "$PATH:/home/$USER/.local/bin"
 WORKDIR /home/$USER/hashfields
 
-USER $USER
+RUN python -m pip install --upgrade pip
 
-# update PATH for local pip installs
-ENV PATH "$PATH:/home/$USER/.local/bin"
+COPY . .
+RUN pip install -e .[dev,test]
 
-RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir pre-commit
+# install pre-commit environments in throwaway Git repository
+# https://stackoverflow.com/a/68758943
+COPY .pre-commit-config.yaml .
+RUN git init . && \
+    pre-commit install-hooks && \
+    rm -rf .git
+
+CMD ["sleep", "infinity"]

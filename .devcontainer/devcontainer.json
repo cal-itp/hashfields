@@ -6,17 +6,25 @@
   "workspaceFolder": "/home/calitp/hashfields",
   "customizations": {
     "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
+      },
       "extensions": [
-        "ms-dotnettools.csharp",
-        "josefpihrt-vscode.roslynator",
-        "formulahendry.dotnet-test-explorer",
-        "fernandoescolar.vscode-solution-explorer",
         "eamodio.gitlens",
-        "spmeesseman.vscode-taskexplorer",
-        "mechatroner.rainbow-csv"
+        "esbenp.prettier-vscode",
+        "mechatroner.rainbow-csv",
+        "mhutchie.git-graph",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "tamasfe.even-better-toml"
       ]
     }
   },
-  "postAttachCommand": ["/bin/bash", ".devcontainer/postAttach.sh"],
   "shutdownAction": "stopCompose"
 }

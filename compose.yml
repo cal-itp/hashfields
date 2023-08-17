@@ -1,3 +1,4 @@
+name: hashfields
 version: "3.8"
 
 services:
@@ -7,8 +8,6 @@ services:
       dockerfile: .devcontainer/Dockerfile
     command: sleep infinity
     entrypoint: []
-    environment:
-      - DOTNET_ENVIRONMENT=Development
     image: hashfields:dev
     volumes:
       - .:/home/calitp/hashfields
