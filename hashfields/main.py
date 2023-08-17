@@ -61,6 +61,7 @@ def main(argv=None):
     data = csv.read(args.input, args.delimiter)
 
     hashed_data = hashing.hash_data(data, hash_alg=args.hash_alg, skip=args.skip, drop=args.drop)
-    print(hashed_data.info())
+
+    csv.write(hashed_data, args.output)
 
     return RESULT_SUCCESS

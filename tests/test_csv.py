@@ -1,12 +1,22 @@
+import io
+
 import pandas
 import pytest
 
-from hashfields.csv import read
+from hashfields.csv import read, write
 
 
 @pytest.fixture
 def spy_pandas_read_csv(mocker):
     return mocker.spy(pandas, "read_csv")
+
+
+@pytest.fixture
+def spy_DataFrame_to_csv(mocker):
+    def _spy(dataframe):
+        return mocker.spy(dataframe, "to_csv")
+
+    return _spy
 
 
 def test_read_default(csv_string_io, spy_pandas_read_csv):
@@ -39,3 +49,15 @@ def test_read_emptydata(csv_string_io, spy_pandas_read_csv):
 
     spy_pandas_read_csv.assert_called_once()
     assert dataframe.equals(pandas.DataFrame())
+
+
+def test_write(spy_DataFrame_to_csv, csv_dataframe):
+    spy = spy_DataFrame_to_csv(csv_dataframe)
+    dest = io.StringIO()
+
+    write(csv_dataframe, dest)
+
+    spy.assert_called_once()
+    assert dest in spy.call_args.args
+    assert spy.call_args.kwargs["encoding"] == "utf-8"
+    assert spy.call_args.kwargs["index"] is False

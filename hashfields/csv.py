@@ -18,3 +18,14 @@ def read(path_or_buf: BinaryIO | TextIO, delimiter: str = ",") -> pandas.DataFra
         return pandas.read_csv(path_or_buf, delimiter=delimiter, dtype=str, skipinitialspace=True, skip_blank_lines=True)
     except pandas.errors.EmptyDataError:
         return pandas.DataFrame()
+
+
+def write(dataframe: pandas.DataFrame, path_or_buf: BinaryIO | TextIO) -> None:
+    """Write a DataFrame as CSV to a file path or buffer.
+
+    Args:
+       dataframe (pandas.DataFrame): The DataFrame to serialize as CSV.
+
+       path_or_buf (BinaryIO | TextIO): File path or buffer destination for CSV data.
+    """
+    dataframe.to_csv(path_or_buf, index=False, encoding="utf-8")
