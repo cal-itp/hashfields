@@ -1,4 +1,4 @@
-
 nav:
-  - intro
+  - Intro: README.md
+  - Usage: usage.md
   - ...
