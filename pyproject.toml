@@ -18,7 +18,6 @@ Issues = "https://github.com/cal-itp/hashfields/issues"
 [project.optional-dependencies]
 dev = [
     "black",
-    "build",
     "flake8",
     "pre-commit"
 ]
@@ -28,14 +27,16 @@ test = [
     "pytest-mock"
 ]
 dist =[
-    "pyinstaller"
+    "build",
+    "pyinstaller",
+    "twine"
 ]
 
 [project.scripts]
 hashfields = "hashfields.main:main"
 
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=65", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.black]
@@ -59,3 +60,9 @@ norecursedirs = [
     ".pytest_cache",
     ".vscode",
 ]
+
+[tool.setuptools]
+packages = ["hashfields"]
+
+[tool.setuptools.dynamic]
+version = {attr = "hashfields.__version__"}

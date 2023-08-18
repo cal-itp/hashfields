@@ -2,6 +2,14 @@
 
 Selectively hash, drop, or keep fields from a flat file (e.g. CSV).
 
+Install with `pip`:
+
+```bash
+pip install hashfields
+```
+
+Or visit the [Releases page](https://github.com/cal-itp/hashfields/releases) for pre-built, self-contained executables.
+
 ## Example
 
 Given this input CSV:
