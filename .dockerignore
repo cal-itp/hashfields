@@ -1,0 +1,10 @@
+.devcontainer
+.git
+.github
+.pytest_cache
+.vscode
+build
+dist
+tests
+.coverage
+*.egg-info

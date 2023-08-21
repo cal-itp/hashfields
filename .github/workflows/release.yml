@@ -1,6 +1,7 @@
 name: Publish release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "202[2-9].0[1-9].[1-9]" # 2022.02.2
@@ -14,47 +15,40 @@ jobs:
 
     strategy:
       matrix:
-        dotnet: [6.0.x]
         runtime: [linux-x64, win10-x64, osx.11.0-x64]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install tooling
-        run: sudo apt-get install -qq zip
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - uses: actions/setup-python@v4
         with:
-          dotnet-version: ${{ matrix.dotnet }}
+          python-version-file: .github/workflows/.python-version
+          cache: pip
+          cache-dependency-path: "**/pyproject.toml"
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore
+      - name: Install package
+        run: pip install -e .[test,dist]
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: ./bin/coverage.sh
 
-      - name: Publish
-        run: dotnet publish -r ${{ matrix.runtime }} -c Release -o ./out src/Cli/hashfields.csproj
+      - name: Package
+        run: ./bin/package.sh
 
       - name: Make artifact path
         id: make-path
         env:
           ref: ${{ github.ref }}
           runtime: ${{ matrix.runtime }}
-          dotnet: ${{ matrix.dotnet }}
         run: |
-          echo "::set-output name=path::hashfields-${ref/refs\/tags\//}-$runtime-dotnet-$dotnet.zip"
+          echo "path=hashfields-${ref/refs\/tags\//}-$runtime.zip" >> $GITHUB_OUTPUT
 
       - name: Zip
         env:
           path: ${{ steps.make-path.outputs.path }}
         run: |
-          zip -r -j $path out/
+          zip -r -j $path dist/
           ls -l $path
 
       - name: Upload artifacts
