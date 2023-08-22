@@ -11,11 +11,12 @@ on:
 
 jobs:
   package:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        runtime: [linux-x64, win10-x64, osx.11.0-x64]
+        # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
