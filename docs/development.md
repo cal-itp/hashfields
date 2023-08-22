@@ -46,14 +46,26 @@ hashfields <version>
 
 ## Make a release
 
-Releases happen automatically with GitHub Actions. Push a calver version tag of
-the form `YYYY.0M.N` where:
+Releases run automatically with GitHub Actions.
+
+### Push a tag
+
+The release process starts by pushing a [calver](https://calver.org/) version
+tag of the form `YYYY.0M.N` where:
 
 - `YYYY` is the 4 digit year
 - `0M` is the 0-prefixed month, e.g. 01 for January, 10 for October
 - `N` is the 1-based release number for the given month, incremented with
   each release that year and month
 
-See [`.github/workflows/release.yml`][release.yml] for more details.
+Pushing a new tag runs the [`release.yml`](https://github.com/cal-itp/hashfields/blob/main/.github/workflows/release.yml)
+workflow.
 
-[release.yml]: https://github.com/cal-itp/hashfields/blob/main/.github/workflows/release.yml
+A new [GitHub Release](https://github.com/cal-itp/hashfields/releases) is created automatically, with pre-build binaries
+for each platform attached as Release Assets. Edit the release notes as-needed.
+
+### Publish to PyPI
+
+When a new release is published from the workflow above, the
+[`pypi.yaml`](https://github.com/cal-itp/hashfields/blob/main/.github/workflows/pypi.yml) runs to publish the new package to
+PyPI.
