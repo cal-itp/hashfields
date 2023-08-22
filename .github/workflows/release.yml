@@ -41,9 +41,12 @@ jobs:
         id: make-path
         env:
           ref: ${{ github.ref }}
-          runtime: ${{ matrix.runtime }}
+          os: ${{ matrix.os }}
         run: |
-          echo "path=hashfields-${ref/refs\/tags\//}-$runtime.zip" >> $GITHUB_OUTPUT
+          # strip off the -latest, replace ubuntu with linux
+          os=${os/-latest/}
+          os=${os/ubuntu/linux}
+          echo "path=hashfields-${ref/refs\/tags\//}-${os}.zip" >> $GITHUB_OUTPUT
 
       - name: Zip
         env:
