@@ -89,19 +89,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version-file: .github/workflows/.python-version
+          cache: pip
+          cache-dependency-path: "**/pyproject.toml"
+
+      - name: Install build dependencies
+        run: pip install -e .[dist]
+
+      - name: Build package
+        run: python -m build
+
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
           name: package
           path: ./package
 
+      - name: Check artifacts
+        run: |
+          ls ./package
+
       - name: Release
         id: release
         uses: softprops/action-gh-release@v1
         with:
           files: "./package/*.zip"
-          token: ${{ secrets.PAT_RELEASE }}
           prerelease: ${{ contains(github.ref, '-rc') }}
+          generate_release_notes: ${{ !contains(github.ref, '-rc') }}
 
       - name: Info
         env:
@@ -109,3 +125,22 @@ jobs:
           url: ${{ steps.release.outputs.url }}
         run: |
           echo "[Release ${ref/refs\/tags\//}](${url}) published on GitHub" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1.5
+        if: ${{ contains(github.ref, '-rc') }}
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TEST_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          print_hash: true
+          skip_existing: true
+          verbose: true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1.5
+        if: ${{ !contains(github.ref, '-rc') }}
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          print_hash: true
