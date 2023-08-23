@@ -52,12 +52,22 @@ jobs:
           os=${os/ubuntu/linux}
           echo "path=hashfields-${ref/refs\/tags\//}-${os}.zip" >> $GITHUB_OUTPUT
 
-      - name: Zip
+      - name: Zip (Linux)
+        if: runner.os != 'Windows'
         env:
-          path: ${{ steps.make-path.outputs.path }}
+          zip_path: ${{ steps.make-path.outputs.path }}
         run: |
-          zip -r -j $path dist/
-          ls -l $path
+          zip -r -j $zip_path dist/
+          ls -l $zip_path
+
+      - name: Zip (Windows)
+        if: runner.os == 'Windows'
+        env:
+          zip_path: ${{ steps.make-path.outputs.path }}
+        shell: pwsh
+        run: |
+          Compress-Archive -Path .\dist\* -DestinationPath ${env:zip_path}
+          dir ${env:zip_path}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
