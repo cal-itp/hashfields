@@ -49,9 +49,9 @@ jobs:
         id: make-path
         env:
           ref: ${{ github.ref }}
-          os: ${{ runner.os }}
+          runner: ${{ runner.os }}
         run: |
-          echo "path=hashfields-${ref/refs\/tags\//}-${os}.zip" >> $GITHUB_OUTPUT
+          echo "path=hashfields-${ref/refs\/tags\//}-${runner}.zip" >> $GITHUB_OUTPUT
 
       - name: Zip (Linux)
         if: runner.os != 'Windows'
@@ -118,13 +118,6 @@ jobs:
           files: "./package/*.zip"
           prerelease: ${{ contains(github.ref, '-rc') }}
           generate_release_notes: ${{ !contains(github.ref, '-rc') }}
-
-      - name: Info
-        env:
-          ref: ${{ github.ref }}
-          url: ${{ steps.release.outputs.url }}
-        run: |
-          echo "[Release ${ref/refs\/tags\//}](${url}) published on GitHub" >> $GITHUB_STEP_SUMMARY
 
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.5
