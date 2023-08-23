@@ -92,8 +92,16 @@ jobs:
           path: ./package
 
       - name: Release
+        id: release
         uses: softprops/action-gh-release@v1
         with:
           files: "./package/*.zip"
           token: ${{ secrets.PAT_RELEASE }}
           prerelease: ${{ contains(github.ref, '-rc') }}
+
+      - name: Info
+        env:
+          ref: ${{ github.ref }}
+          url: ${{ steps.release.outputs.url }}
+        run: |
+          echo "[Release ${ref/refs\/tags\//}](${url}) published on GitHub" >> $GITHUB_STEP_SUMMARY
