@@ -6,9 +6,40 @@ on:
     branches:
       - "main"
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
+    strategy:
+      matrix:
+        # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
+        os: [windows-latest, macos-latest] # ubuntu-latest is done below for the coverage report
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version-file: .github/workflows/.python-version
+          cache: pip
+          cache-dependency-path: "**/pyproject.toml"
+
+      - name: Install package
+        run: pip install -e .[test]
+
+      - name: Test
+        run: ./bin/coverage.sh
+
+  coverage:
+    needs: test
+
     runs-on: ubuntu-latest
+
     permissions:
       # Gives the action the necessary permissions for publishing new
       # comments in pull requests.
@@ -17,6 +48,7 @@ jobs:
       # python-coverage-comment-action branch, and for editing existing
       # comments (to avoid publishing multiple comments in the same PR)
       contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
