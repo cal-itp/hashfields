@@ -99,7 +99,9 @@ jobs:
         run: pip install -e .[dist]
 
       - name: Build package
-        run: python -m build
+        run: |
+          python -m build
+          ls -al ./dist
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
@@ -109,13 +111,16 @@ jobs:
 
       - name: Check artifacts
         run: |
-          ls ./package
+          ls -al ./package
 
       - name: Release
         id: release
         uses: softprops/action-gh-release@v1
         with:
-          files: "./package/*.zip"
+          files: |
+            ./dist/*.whl
+            ./dist/*.tar.gz
+            ./package/*.zip
           prerelease: ${{ contains(github.ref, '-rc') }}
           generate_release_notes: ${{ !contains(github.ref, '-rc') }}
 
