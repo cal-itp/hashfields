@@ -34,7 +34,7 @@ Or package the app for your current system:
 ```console
 pip install -e .[dist]
 
-./bin/package.sh
+pyinstaller --onefile pyinstaller_entrypoint.py --name hashfields
 ```
 
 The resulting executable is located at `./dist/hashfields`:

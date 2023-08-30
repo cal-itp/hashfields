@@ -43,7 +43,7 @@ jobs:
         run: ./bin/coverage.sh
 
       - name: Package
-        run: ./bin/package.sh
+        run: pyinstaller --onefile pyinstaller_entrypoint.py --name hashfields
 
       - name: Make artifact path
         id: make-path
