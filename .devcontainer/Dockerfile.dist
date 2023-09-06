@@ -4,7 +4,7 @@ WORKDIR /builder
 
 COPY . .
 RUN pip install -e .[dist]
-RUN ./bin/package.sh
+RUN pyinstaller --onefile pyinstaller_entrypoint.py --name hashfields
 
 FROM python:3.11
 
