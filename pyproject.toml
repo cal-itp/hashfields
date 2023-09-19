@@ -1,6 +1,6 @@
 [project]
 name = "hashfields"
-dynamic = ["version"]
+version = "2023.09.1"
 description = "Selectively hash, drop, or keep fields from a flat file (e.g. CSV)."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -36,7 +36,7 @@ dist =[
 hashfields = "hashfields.main:main"
 
 [build-system]
-requires = ["setuptools>=65", "setuptools-scm"]
+requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.black]
@@ -63,6 +63,3 @@ norecursedirs = [
 
 [tool.setuptools]
 packages = ["hashfields"]
-
-[tool.setuptools.dynamic]
-version = {attr = "hashfields.__version__"}

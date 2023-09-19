@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 
 import pytest
@@ -12,6 +13,13 @@ def normalize_output(output: str):
 @pytest.fixture
 def hashfields():
     return "hashfields"
+
+
+def test_version():
+    from hashfields import __version__
+
+    assert __version__ is not None
+    assert re.match(r"\d{4}\.\d{1,2}\.\d+", __version__)
 
 
 def test_hashfields_default(capfd, hashfields):
@@ -78,7 +86,6 @@ def test_hashfields_file(capfd, hashfields, source_file, expected_file):
     assert normalize_output(capture.out) == expected
 
 
-# skip test on windows because it reads files written for *nix OSes
 def test_hashfields_skip_drop(capfd, hashfields):
     source_file = "./tests/samples/small.csv"
     expected_file = "./tests/samples/small.hashed.skip_sub.drop_type.csv"
@@ -91,7 +98,6 @@ def test_hashfields_skip_drop(capfd, hashfields):
     assert normalize_output(capture.out) == expected
 
 
-# skip test on windows because it reads files written for *nix OSes
 @pytest.mark.parametrize(
     ("source_file", "expected_file"),
     [

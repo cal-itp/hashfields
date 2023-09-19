@@ -1,1 +1,7 @@
-__version__ = "2023.09.1"
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("hashfields")
+except PackageNotFoundError:
+    # package is not installed
+    pass
