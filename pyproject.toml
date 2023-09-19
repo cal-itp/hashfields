@@ -10,11 +10,6 @@ dependencies = [
     "pandas==2.1.1"
 ]
 
-[project.urls]
-Code = "https://github.com/cal-itp/hashfields"
-Documentation = "https://docs.calitp.org/hashfields"
-Issues = "https://github.com/cal-itp/hashfields/issues"
-
 [project.optional-dependencies]
 dev = [
     "black",
@@ -34,6 +29,11 @@ dist =[
 
 [project.scripts]
 hashfields = "hashfields.main:main"
+
+[project.urls]
+Code = "https://github.com/cal-itp/hashfields"
+Documentation = "https://docs.calitp.org/hashfields"
+Issues = "https://github.com/cal-itp/hashfields/issues"
 
 [build-system]
 requires = ["setuptools>=65", "wheel"]
