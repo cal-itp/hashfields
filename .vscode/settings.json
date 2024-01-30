@@ -7,7 +7,7 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.languageServer": "Pylance",
   "python.testing.pytestArgs": ["tests"],
