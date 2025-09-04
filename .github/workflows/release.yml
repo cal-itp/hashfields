@@ -125,7 +125,7 @@ jobs:
           generate_release_notes: ${{ !contains(github.ref, '-rc') }}
 
       - name: Publish to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.5
+        uses: pypa/gh-action-pypi-publish@release/v1.13
         if: ${{ contains(github.ref, '-rc') }}
         with:
           user: __token__
@@ -136,7 +136,7 @@ jobs:
           verbose: true
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.5
+        uses: pypa/gh-action-pypi-publish@release/v1.13
         if: ${{ !contains(github.ref, '-rc') }}
         with:
           user: __token__
