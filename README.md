@@ -8,7 +8,7 @@
 | hashfields/csv.py          |        9 |        0 |        0 |        0 |     100% |           |
 | hashfields/hashing.py      |       14 |        0 |        4 |        0 |     100% |           |
 | hashfields/main.py         |       22 |        0 |        2 |        0 |     100% |           |
-|                  **TOTAL** |   **46** |    **0** |    **6** |    **0** | **100%** |           |
+| **TOTAL**                  |   **46** |    **0** |    **6** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
