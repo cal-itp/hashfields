@@ -3,7 +3,6 @@ import sys
 
 from hashfields import csv, hashing, __version__ as version
 
-
 RESULT_SUCCESS = 0
 
 
